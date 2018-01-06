@@ -25,7 +25,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
-
+    public $newPassword,$confirmPassword;
 
     /**
      * @inheritdoc
@@ -50,6 +50,16 @@ class User extends ActiveRecord implements IdentityInterface {
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['photo','safe'],
+            ['name' ,'string','max' => 255],
+            [['name','email','contact_number'] ,'required','on' => ['userprofile']],
+            [['email'] ,'email','on' => ['userprofile']],
+            [['contact_number'] ,'integer','min' => 12,'on' => ['userprofile']],
+            //[['contact_number'] ,'integer','min' => 10,'on' => ['userprofile']],
+            ['photo','file','extensions' => 'jpg,gif,png','on' => ['userprofile']],
+            ['photo','file','maxSize' => '10000000','on' => ['userprofile']],
+            ['photo', 'string', 'max' => 255,'on' => ['userprofile']],
+            [['password','newPassword','confirmPassword'] ,'required','on' => ['changepassword']],
         ];
     }
 
@@ -169,5 +179,14 @@ class User extends ActiveRecord implements IdentityInterface {
      */
     public function removePasswordResetToken() {
         $this->password_reset_token = null;
+    }
+
+    public function getImageFilePath() {
+        return isset($this->photo) && $this->photo != '' ? Yii::$app->params['uploadPath'] . $this->photo : null;
+    }
+
+    public function getImageUrl() {
+        $avatar = isset($this->photo) && $this->photo != '' ? $this->photo : 'default.svg';
+        return Yii::$app->params['uploadUrl'] . $avatar;
     }
 }

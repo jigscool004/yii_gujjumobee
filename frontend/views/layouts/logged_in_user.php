@@ -60,25 +60,20 @@ AppAsset::register($this);
                 <div class="theiaStickySidebar" style="padding-top: 0px; padding-bottom: 1px; position: static;">
                     <div class="user-profile">
                         <a href="<?php echo Url::to('user/profile',true)?>">
-                            <img id="profilepic" alt=""
-                                 src="http://local.gujjumobi.com/assest/upload/user_profile/Koala1.jpg"
-                                 class="img-thumbnail span-xs"></a>
-                        <form id="change-profile" method="POST">
-                           <span class="btn btn-default btn-file btn-xs">
-                           <i class="icon-box-icon flaticon-photo-camera" style="font-size:14px;"></i> &nbsp;&nbsp;Browse
-                              <input type="file" name="upload" id="upload">
-                           </span>
-
-                        </form>
+                            <?php
+                               $photo =Yii::$app->user->identity->photo != "" ?
+                                            Yii::$app->user->identity->photo : 'default.svg';
+                            echo Html::img('/frontend/web/uploads/avtar/' . $photo)?>
+                        </a>
                         <div class="profile-detail">
-                            <h6><?php echo Yii::$app->session->get('name')?></h6>
+                            <h6><?php echo Yii::$app->user->identity->name?></h6>
                             <ul class="contact-details">
 
                                 <li>
-                                    <i class="fa fa-envelope"></i><?php echo Yii::$app->session->get('email')?>
+                                    <i class="fa fa-envelope"></i><?php echo Yii::$app->user->identity->email?>
                                 </li>
                                 <li>
-                                    <i class="fa fa-phone"></i> +91-<?php echo Yii::$app->session->get('contact_number')?>
+                                    <i class="fa fa-phone"></i> +91-<?php echo Yii::$app->user->identity->contact_number?>
                                 </li>
                             </ul>
                         </div>

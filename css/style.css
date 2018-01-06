@@ -6975,7 +6975,7 @@ span.app-store-btn {
 .btn-file {
     position: relative;
     overflow: hidden;
-    padding: 15px 30px !important;
+    padding: 5px 10px !important;
 }
 .btn-file input[type=file] {
     position: absolute;
