@@ -127,13 +127,13 @@ class UserController extends Controller {
     public function actionChangePassword() {
         $model = new ChangePassword();
 
-        if ($model->load(Yii::$app->request->post()) && $model->changePwd()) {
-        exit;
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePwd()) {
+             $this->redirect(['user/change-password']);
+        } else {
+            return $this->render('changepassword',[
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('changepassword',[
-            'model' => $model,
-        ]);
     }
 
     protected function findModel($id) {

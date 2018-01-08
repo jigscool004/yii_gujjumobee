@@ -21,13 +21,27 @@ class ChangePassword extends Model {
 
     public function rules() {
         return [
-            [['password', 'new_password', 'confirm_password'],'required']
+            [['password', 'new_password', 'confirm_password'],'required'],
+            ['password','validatePassword'],
+            ['confirm_password','compare','compareAttribute' => 'new_password', 'message'=>"Passwords don't match" ],
+
         ];
     }
 
+    public function validatePassword($attribute, $params, $validator) {
+        $user = new User;
+        $user->password_hash = Yii::$app->user->identity->password_hash;
+        $isValidate = $user->validatePassword($this->password,Yii::$app->user->identity->password_hash);
+        if ($isValidate == false) {
+            $this->addError($attribute,'Current password is not matched');
+        } else {
+            $user->password_hash = $user->password_hash;
+        }
+    }
+
     public function changePwd() {
-        $model = User::findOne(Yii::$app->user->identity->getId());
-        
-        var_dump($model); exit;
+        $model = User::findOne(Yii::$app->user->getId());
+        $model->setPassword($this->new_password);
+        return $model->save();
     }
 }

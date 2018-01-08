@@ -63,12 +63,12 @@ $this->title = 'User Profile';
                             'showCaption' => false,],
                     ]); ?>
                 </div>
-                <div class="clearfix"></div>
-                <div class="col-md-4 col-sm-4 col-xs-12">
+
+                <div class="col-md-8 col-sm-8 col-xs-12">
                     <?= Html::submitButton('Update My Info', ['class' => 'btn btn-theme']) ?>
 
                 </div>
-
+                <div class="clearfix"></div>
             </div>
             <?php ActiveForm::end() ?>
         </div>

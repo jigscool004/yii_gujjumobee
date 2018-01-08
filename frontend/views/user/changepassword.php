@@ -20,7 +20,7 @@ $this->title = 'Change Password';
                 <h2 class="heading-md">Change Your Account Password</h2>
 
 
-                <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
+                <?php $form = ActiveForm::begin() ?>
 
                 <div class="col-md-8 col-sm-8 col-xs-12">
                     <?= $form->field($model, 'password')->passwordInput(); ?>
@@ -31,10 +31,11 @@ $this->title = 'Change Password';
                 <div class="col-md-8 col-sm-8 col-xs-12">
                     <?= $form->field($model, 'confirm_password')->passwordInput(); ?>
                 </div>
-                <div class="clearfix"></div>
-                <div class="col-md-4 col-sm-4 col-xs-12">
+
+                <div class="col-md-8 col-sm-8 col-xs-12">
                     <?= Html::submitButton('Change Password', ['class' => 'btn btn-theme']) ?>
                 </div>
+                <div class="clearfix"></div>
             </div>
             <?php ActiveForm::end() ?>
             <div class="clearfix"></div>
