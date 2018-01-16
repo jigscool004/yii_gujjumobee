@@ -18,8 +18,8 @@ class CitySearch extends City
     public function rules()
     {
         return [
-            [['id', 'name', 'status', 'created_by', 'update_by'], 'integer'],
-            [['created_on', 'updated_on'], 'safe'],
+            [['id', 'status', 'created_by', 'update_by'], 'integer'],
+            [['name','created_on', 'updated_on'], 'safe'],
         ];
     }
 
@@ -60,7 +60,7 @@ class CitySearch extends City
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'name' => $this->name,
+            //'name' => $this->name,
             'status' => $this->status,
             'created_by' => $this->created_by,
             'created_on' => $this->created_on,
@@ -68,6 +68,7 @@ class CitySearch extends City
             'updated_on' => $this->updated_on,
         ]);
 
+        $query->andFilterWhere(['like', 'name', $this->name]);
         return $dataProvider;
     }
 }

@@ -18,15 +18,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'zipcode')->textInput() ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+    <?= $form->field($model, 'status')->dropDownList([1 => 'Active', 0 => 'Inactive'],['prompt' => 'Select']) ?>
 
-    <?= $form->field($model, 'created_on')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'updated_on')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

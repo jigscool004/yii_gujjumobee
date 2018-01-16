@@ -26,11 +26,26 @@ AppAsset::register($this);
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <?php $this->beginBody() ?>
-<div class="wrapper" >
+<div class="wrapper">
 
     <?php echo $this->render('_header'); ?><?php echo $this->render('leftbar'); ?>
-    <div class="content-wrapper" >
-        <?= $content;?>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                <?= Html::encode($this->title) ?>
+                <small>Control panel</small>
+            </h1>
+
+            <?= Breadcrumbs::widget([
+                'itemTemplate' => "<li>{link}  </li>\n", // template for all link
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                'options' => ['class' => 'breadcrumb']
+            ]) ?>
+        </section>
+        <section class="content">
+            <?= $content; ?>
+        </section>
+
     </div>
     <footer class="main-footer">
         <div class="pull-right hidden-xs">

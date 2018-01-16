@@ -66,8 +66,12 @@ class AreaController extends Controller
     {
         $model = new Area();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->created_on = date('Y-m-d H:i:s');
+            $model->created_by = 1;
+            if ($model->save()) {
+                return $this->redirect(['index', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -86,8 +90,13 @@ class AreaController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->updated_on = date('Y-m-d H:i:s');
+            $model->updated_by = 1;
+            if ($model->save()) {
+                return $this->redirect(['index', 'id' => $model->id]);
+            }
+
         }
 
         return $this->render('update', [
