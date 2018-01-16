@@ -43,8 +43,7 @@ use yii\helpers\ArrayHelper;
  *
  * @author Kartik Visweswaran <kartikv2@gmail.com>
  */
-class SideNav extends \yii\widgets\Menu
-{
+class SideNav extends \yii\widgets\Menu {
 
     /**
      * Panel contextual states
@@ -69,7 +68,7 @@ class SideNav extends \yii\widgets\Menu
      * for usage with glyphicons available with Bootstrap.
      */
     public $iconPrefix = 'glyphicon glyphicon-';
-    
+
     /**
      * @var array string/boolean the sidenav heading. This is not HTML encoded
      * When set to false or null, no heading container will be displayed.
@@ -136,8 +135,7 @@ class SideNav extends \yii\widgets\Menu
         self::TYPE_WARNING,
     ];
 
-    public function init()
-    {
+    public function init() {
         parent::init();
         SideNavAsset::register($this->getView());
         $this->activateParents = true;
@@ -145,31 +143,29 @@ class SideNav extends \yii\widgets\Menu
         $this->linkTemplate = '<a href="{url}">{icon}{label}</a>';
         $this->labelTemplate = '{icon}{label}';
         $this->markTopItems();
-        Html::addCssClass($this->options, 'nav nav-pills nav-stacked kv-sidenav');
+        Html::addCssClass($this->options, '');
     }
 
     /**
      * Renders the side navigation menu.
      * with the heading and panel containers
      */
-    public function run()
-    {
+    public function run() {
         $heading = '';
         if (isset($this->heading) && $this->heading != '') {
             Html::addCssClass($this->headingOptions, 'panel-heading');
             $heading = Html::tag('div', '<h3 class="panel-title">' . $this->heading . '</h3>', $this->headingOptions);
         }
-        $body = Html::tag('div', $this->renderMenu(), ['class' => 'table']);
+        $body = Html::tag('div', $this->renderMenu(), ['class' => '']);
         $type = in_array($this->type, self::$_validTypes) ? $this->type : self::TYPE_DEFAULT;
-        Html::addCssClass($this->containerOptions, "panel panel-{$type}");
+        Html::addCssClass($this->containerOptions, "");
         echo Html::tag('div', $heading . $body, $this->containerOptions);
     }
 
     /**
      * Renders the main menu
      */
-    protected function renderMenu()
-    {
+    protected function renderMenu() {
         if ($this->route === null && Yii::$app->controller !== null) {
             $this->route = Yii::$app->controller->getRoute();
         }
@@ -186,8 +182,7 @@ class SideNav extends \yii\widgets\Menu
     /**
      * Marks each topmost level item which is not a submenu
      */
-    protected function markTopItems()
-    {
+    protected function markTopItems() {
         $items = [];
         foreach ($this->items as $item) {
             if (empty($item['items'])) {
@@ -205,8 +200,7 @@ class SideNav extends \yii\widgets\Menu
      * @return string the rendering result
      * @throws InvalidConfigException
      */
-    protected function renderItem($item)
-    {
+    protected function renderItem($item) {
         $this->validateItems($item);
         $template = ArrayHelper::getValue($item, 'template', $this->linkTemplate);
         $url = Url::to(ArrayHelper::getValue($item, 'url', '#'));
@@ -214,14 +208,14 @@ class SideNav extends \yii\widgets\Menu
             if (empty($item['items'])) {
                 $template = str_replace('{icon}', $this->indItem . '{icon}', $template);
             } else {
-                $template = isset($item['template']) ? $item['template'] :'<a href="{url}" class="kv-toggle">{icon}{label}</a>';
-                $openOptions = ($item['active']) ? ['class' => 'opened'] : ['class' => 'opened', 'style' => 'display:none'];
-                $closeOptions = ($item['active']) ? ['class' => 'closed', 'style' => 'display:none'] : ['class' => 'closed'];
+                $template = isset($item['template']) ? $item['template'] : '<a href="{url}" class="kv-toggle">{icon}{label}</a>';
+                $openOptions = ($item['active']) ? ['class' => 'opened pull-right'] : ['class' => 'opened pull-right', 'style' => 'display:none'];
+                $closeOptions = ($item['active']) ? ['class' => 'closed pull-right', 'style' => 'display:none'] : ['class' => 'closed pull-right'];
                 $indicator = Html::tag('span', $this->indMenuOpen, $openOptions) . Html::tag('span', $this->indMenuClose, $closeOptions);
                 $template = str_replace('{icon}', $indicator . '{icon}', $template);
             }
         }
-        $icon = empty($item['icon']) ? '' : '<span class="' . $this->iconPrefix . $item['icon'] . '"></span> &nbsp;';
+        $icon = empty($item['icon']) ? '' : '<i class="' . $this->iconPrefix . $item['icon'] . '"></i> &nbsp;';
         unset($item['icon'], $item['top']);
         return strtr($template, [
             '{url}' => $url,
@@ -235,8 +229,7 @@ class SideNav extends \yii\widgets\Menu
      *
      * @throws InvalidConfigException
      */
-    protected function validateItems($item)
-    {
+    protected function validateItems($item) {
         if (!isset($item['label'])) {
             throw new InvalidConfigException("The 'label' option is required.");
         }
