@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m171211_172629_mobile_model
+ * Class m180109_182255_mobile_model_table
  */
-class m171211_172629_mobile_model extends Migration {
+class m180109_182255_mobile_model_table extends Migration {
     /**
      * @inheritdoc
      */
@@ -27,7 +27,7 @@ class m171211_172629_mobile_model extends Migration {
      * @inheritdoc
      */
     public function safeDown() {
-        echo "m171211_172629_mobile_model cannot be reverted.\n";
+        echo "m180109_182255_mobile_model_table cannot be reverted.\n";
         $this->dropTable('mobile_model');
         return false;
     }
@@ -41,7 +41,7 @@ class m171211_172629_mobile_model extends Migration {
 
     public function down()
     {
-        echo "m171211_172629_mobile_model cannot be reverted.\n";
+        echo "m180109_182255_mobile_model_table cannot be reverted.\n";
 
         return false;
     }

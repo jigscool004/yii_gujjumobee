@@ -3,16 +3,15 @@
 use yii\db\Migration;
 
 /**
- * Class m171211_172629_mobile_model
+ * Class m180109_182402_mobile_category
  */
-class m171211_172629_mobile_model extends Migration {
+class m180109_182402_mobile_category extends Migration {
     /**
      * @inheritdoc
      */
     public function safeUp() {
-        $this->createTable('mobile_model', [
+        $this->createTable('mobile_category', [
             'id' => $this->primaryKey(),
-            'category_id' => $this->integer(11),
             'name' => $this->string(225),
             'status' => $this->integer('1')->defaultValue(1),
             'created_by' => $this->integer(),
@@ -27,8 +26,8 @@ class m171211_172629_mobile_model extends Migration {
      * @inheritdoc
      */
     public function safeDown() {
-        echo "m171211_172629_mobile_model cannot be reverted.\n";
-        $this->dropTable('mobile_model');
+        echo "m180109_182402_mobile_category cannot be reverted.\n";
+        $this->dropTable('mobile_category');
         return false;
     }
 
@@ -41,7 +40,7 @@ class m171211_172629_mobile_model extends Migration {
 
     public function down()
     {
-        echo "m171211_172629_mobile_model cannot be reverted.\n";
+        echo "m180109_182402_mobile_category cannot be reverted.\n";
 
         return false;
     }
