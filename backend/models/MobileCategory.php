@@ -31,6 +31,7 @@ class MobileCategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['status','name'],'required'],
             [['status', 'created_by', 'update_by'], 'integer'],
             [['created_on', 'updated_on'], 'safe'],
             [['name'], 'string', 'max' => 225],

@@ -2,19 +2,25 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use yii\helpers\ArrayHelper;
+use backend\models\City;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Area */
 /* @var $form yii\widgets\ActiveForm */
 ?>
+<div class="row">
 
-<div class="area-form">
-
+    <div class="box box-info">
+        <div class="box-body">
+            <div class="col-md-8">
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'area')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'city_id')->textInput() ?>
+    <?= $form->field($model, 'city_id')->dropDownList(
+            ArrayHelper::map(City::find()->where(['status' => 1])->All(),'id','name'),
+            ['prompt' => 'Select City']
+    ) ?>
 
     <?= $form->field($model, 'zipcode')->textInput() ?>
 
@@ -27,4 +33,7 @@ use yii\widgets\ActiveForm;
 
     <?php ActiveForm::end(); ?>
 
+            </div>
+        </div>
+    </div>
 </div>

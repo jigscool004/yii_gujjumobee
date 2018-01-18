@@ -1,18 +1,18 @@
 <?php
 
-namespace backend\controllers;
+namespace frontend\controllers;
 
 use Yii;
-use backend\models\MobileCategory;
-use backend\models\MobileCategorySearch;
+use frontend\models\Adpost;
+use frontend\models\AdpostSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * MobileCategoryController implements the CRUD actions for MobileCategory model.
+ * AdpostController implements the CRUD actions for Adpost model.
  */
-class MobileCategoryController extends Controller {
+class AdpostController extends Controller {
     /**
      * @inheritdoc
      */
@@ -28,11 +28,11 @@ class MobileCategoryController extends Controller {
     }
 
     /**
-     * Lists all MobileCategory models.
+     * Lists all Adpost models.
      * @return mixed
      */
     public function actionIndex() {
-        $searchModel = new MobileCategorySearch();
+        $searchModel = new AdpostSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -42,7 +42,7 @@ class MobileCategoryController extends Controller {
     }
 
     /**
-     * Displays a single MobileCategory model.
+     * Displays a single Adpost model.
      *
      * @param integer $id
      *
@@ -56,19 +56,15 @@ class MobileCategoryController extends Controller {
     }
 
     /**
-     * Creates a new MobileCategory model.
+     * Creates a new Adpost model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate() {
-        $model = new MobileCategory();
+        $model = new Adpost();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->created_by = 1;
-            $model->created_on = date('Y-m-d H:i:s');
-            if ($model->save()) {
-                return $this->redirect(['index', 'id' => $model->id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -77,7 +73,7 @@ class MobileCategoryController extends Controller {
     }
 
     /**
-     * Updates an existing MobileCategory model.
+     * Updates an existing Adpost model.
      * If update is successful, the browser will be redirected to the 'view' page.
      *
      * @param integer $id
@@ -88,12 +84,8 @@ class MobileCategoryController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->update_by = 1;
-            $model->updated_on = date('Y-m-d H:i:s');
-            if ($model->save()) {
-                return $this->redirect(['index', 'id' => $model->id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -102,7 +94,7 @@ class MobileCategoryController extends Controller {
     }
 
     /**
-     * Deletes an existing MobileCategory model.
+     * Deletes an existing Adpost model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      *
      * @param integer $id
@@ -117,16 +109,16 @@ class MobileCategoryController extends Controller {
     }
 
     /**
-     * Finds the MobileCategory model based on its primary key value.
+     * Finds the Adpost model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      *
      * @param integer $id
      *
-     * @return MobileCategory the loaded model
+     * @return Adpost the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id) {
-        if (($model = MobileCategory::findOne($id)) !== NULL) {
+        if (($model = Adpost::findOne($id)) !== NULL) {
             return $model;
         }
 

@@ -18,8 +18,8 @@ class AreaSearch extends Area
     public function rules()
     {
         return [
-            [['id', 'city_id', 'zipcode', 'status', 'created_by', 'updated_by'], 'integer'],
-            [['area', 'created_on', 'updated_on'], 'safe'],
+            [['id',  'zipcode', 'status', 'created_by', 'updated_by'], 'integer'],
+            [['area','city_id', 'created_on', 'updated_on'], 'safe'],
         ];
     }
 
@@ -56,11 +56,12 @@ class AreaSearch extends Area
             // $query->where('0=1');
             return $dataProvider;
         }
+        $query->joinWith('cityDetail');
 
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'city_id' => $this->city_id,
+        //    'city_id' => $this->city_id,
             'zipcode' => $this->zipcode,
             'status' => $this->status,
             'created_on' => $this->created_on,
@@ -70,6 +71,7 @@ class AreaSearch extends Area
         ]);
 
         $query->andFilterWhere(['like', 'area', $this->area]);
+        $query->andFilterWhere(['like', 'city.name', $this->city_id]);
 
         return $dataProvider;
     }

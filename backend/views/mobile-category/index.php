@@ -10,30 +10,38 @@ use yii\grid\GridView;
 $this->title = 'Mobile Categories';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mobile-category-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <?= Html::a('Create Mobile Category', ['create'], ['class' => 'btn btn-sm pull-right btn-success']) ?>
+            </div>
+            <div class="box-body">
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    'columns' => [
+                        ['class' => 'yii\grid\SerialColumn'],
 
-    <p>
-        <?= Html::a('Create Mobile Category', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'name',
-            'status',
-            'created_by',
-            'created_on',
-            //'updated_on',
-            //'update_by',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+                      //  'id',
+                        'name',
+                        [
+                            'attribute' => 'status',
+                            'value' => function($model) {
+                                return $model->status == 1 ? 'Active' : 'Inactive';
+                            },
+                            'filter' => Html::dropDownList('MobileCategorySearch[status]',
+                                isset($_REQUEST['MobileCategorySearch']['status']) ?
+                                    $_REQUEST['MobileCategorySearch']['status'] : '',
+                                [1 => 'Active', 0 => 'Inactive'],
+                                ['prompt' => 'Select', 'class' => 'form-control']
+                            )
+                        ],
+                        ['class' => 'yii\grid\ActionColumn'],
+                    ],
+                ]); ?>
+            </div>
+        </div>
+    </div>
 </div>

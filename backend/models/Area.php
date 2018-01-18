@@ -17,23 +17,22 @@ use Yii;
  * @property string $updated_on
  * @property int $updated_by
  */
-class Area extends \yii\db\ActiveRecord
-{
+class Area extends \yii\db\ActiveRecord {
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'area';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['city_id', 'zipcode', 'status', 'created_by', 'updated_by'], 'integer'],
+            [['area','city_id','zipcode','status'],'required'],
+            [['city_id', 'zipcode', 'status'], 'integer'],
+
             [['created_on', 'updated_on'], 'safe'],
             [['area'], 'string', 'max' => 225],
         ];
@@ -42,12 +41,11 @@ class Area extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
-            'area' => 'Area',
-            'city_id' => 'City ID',
+            'area' => 'Area name',
+            'city_id' => 'City',
             'zipcode' => 'Zipcode',
             'status' => 'Status',
             'created_on' => 'Created On',
@@ -55,5 +53,9 @@ class Area extends \yii\db\ActiveRecord
             'updated_on' => 'Updated On',
             'updated_by' => 'Updated By',
         ];
+    }
+
+    public function getCityDetail() {
+        return $this->hasOne(City::className(),['id' => 'city_id']);
     }
 }

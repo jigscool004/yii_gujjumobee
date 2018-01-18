@@ -62,7 +62,7 @@ use yii\bootstrap\Dropdown;
                     </ul>
                     <ul class="menu-search-bar pull-right">
                         <li>
-                            <a href="<?php #echo site_url('adpost/index') ?>" class="btn btn-light"><i
+                            <a href="<?php echo  Url::to('adpost/create', true); ?>" class="btn btn-light"><i
                                         class="fa fa-plus" aria-hidden="true"></i> Post Free Ad</a>
                         </li>
                     </ul>

@@ -12,13 +12,11 @@ use yii\filters\VerbFilter;
 /**
  * MobileModelController implements the CRUD actions for MobileModel model.
  */
-class MobileModelController extends Controller
-{
+class MobileModelController extends Controller {
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -33,8 +31,7 @@ class MobileModelController extends Controller
      * Lists all MobileModel models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $searchModel = new MobileModelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -46,12 +43,13 @@ class MobileModelController extends Controller
 
     /**
      * Displays a single MobileModel model.
+     *
      * @param integer $id
+     *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -62,12 +60,16 @@ class MobileModelController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new MobileModel();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->created_by = 1;
+            $model->created_on = date('Y-m-d H:i:s');
+            if ($model->save()) {
+                return $this->redirect(['index', 'id' => $model->id]);
+            }
+
         }
 
         return $this->render('create', [
@@ -78,16 +80,22 @@ class MobileModelController extends Controller
     /**
      * Updates an existing MobileModel model.
      * If update is successful, the browser will be redirected to the 'view' page.
+     *
      * @param integer $id
+     *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->update_by = 1;
+            $model->updated_on = date('Y-m-d H:i:s');
+            if ($model->save()) {
+                return $this->redirect(['index', 'id' => $model->id]);
+            }
+
         }
 
         return $this->render('update', [
@@ -98,12 +106,13 @@ class MobileModelController extends Controller
     /**
      * Deletes an existing MobileModel model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
+     *
      * @param integer $id
+     *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -112,13 +121,14 @@ class MobileModelController extends Controller
     /**
      * Finds the MobileModel model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
+     *
      * @param integer $id
+     *
      * @return MobileModel the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
-        if (($model = MobileModel::findOne($id)) !== null) {
+    protected function findModel($id) {
+        if (($model = MobileModel::findOne($id)) !== NULL) {
             return $model;
         }
 

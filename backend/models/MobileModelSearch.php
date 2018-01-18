@@ -10,24 +10,21 @@ use backend\models\MobileModel;
 /**
  * MobileModelSearch represents the model behind the search form of `backend\models\MobileModel`.
  */
-class MobileModelSearch extends MobileModel
-{
+class MobileModelSearch extends MobileModel {
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['id', 'category_id', 'status', 'created_by', 'update_by'], 'integer'],
-            [['name', 'created_on', 'updated_on'], 'safe'],
+            [['id', 'status', 'created_by', 'update_by'], 'integer'],
+            [['name', 'category_id', 'created_on', 'updated_on'], 'safe'],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,8 +36,7 @@ class MobileModelSearch extends MobileModel
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = MobileModel::find();
 
         // add conditions that should always apply here
@@ -57,11 +53,11 @@ class MobileModelSearch extends MobileModel
             return $dataProvider;
         }
 
+        $query->joinWith('mobileCategory');
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'category_id' => $this->category_id,
-            'status' => $this->status,
+            'mobile_model.status' => $this->status,
             'created_by' => $this->created_by,
             'created_on' => $this->created_on,
             'updated_on' => $this->updated_on,
@@ -69,6 +65,7 @@ class MobileModelSearch extends MobileModel
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'mobile_category.name', $this->category_id]);
 
         return $dataProvider;
     }
