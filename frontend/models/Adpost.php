@@ -77,4 +77,8 @@ class Adpost extends \yii\db\ActiveRecord {
             'updated_on' => 'Updated On',
         ];
     }
+
+    public function getMobileModel() {
+
+    }
 }

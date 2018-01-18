@@ -10,12 +10,14 @@ $this->title = 'Create Adpost';
 $this->params['breadcrumbs'][] = ['label' => 'Adposts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="adpost-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+<div class="heading-panel">
+    <h3 class="main-title text-left">
+        Post Your Ad
+    </h3>
 </div>
+
+
+<?= $this->render('_form', [
+    'model' => $model,
+]) ?>
+

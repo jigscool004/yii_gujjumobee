@@ -61,6 +61,7 @@ class AdpostController extends Controller {
      * @return mixed
      */
     public function actionCreate() {
+        $this->layout = 'adpost';
         $model = new Adpost();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
