@@ -3,7 +3,8 @@
 namespace frontend\models;
 
 use Yii;
-
+use yii\helpers\FileHelper;
+use frontend\models\Document;
 /**
  * This is the model class for table "adpost".
  *
@@ -31,6 +32,8 @@ class Adpost extends \yii\db\ActiveRecord {
     /**
      * @inheritdoc
      */
+    public $fileName;
+
     public static function tableName() {
         return 'adpost';
     }
@@ -41,10 +44,12 @@ class Adpost extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['id', 'adpost_user_id', 'category', 'price', 'city', 'location', 'zipcode', 'status', 'is_archived', 'is_deleted'], 'integer'],
-            [['adpost_id', 'adtitle', 'adpost_user_id', 'category', 'price', 'ad_desc', 'ad_tag', 'adpost_username', 'adpost_user_mobile', 'city', 'location', 'zipcode', 'created_on'], 'required'],
+            [[ 'adtitle', 'adpost_user_id', 'category', 'price', 'ad_desc',
+                'adpost_username', 'adpost_user_mobile', 'city', 'location', 'zipcode', 'created_on'], 'required'],
             [['ad_desc'], 'string'],
-            [['created_on', 'updated_on'], 'safe'],
+            [['created_on', 'updated_on', 'fileName'], 'safe'],
             [['adpost_id'], 'string', 'max' => 11],
+            ['fileName', 'file', 'extensions' => 'jpg,gif,png', 'maxSize' => 20 * 1024 * 1024, 'maxFiles' => 0],
             [['adtitle', 'ad_tag', 'adpost_username'], 'string', 'max' => 255],
             [['model'], 'string', 'max' => 30],
             [['adpost_user_mobile'], 'string', 'max' => 20],
@@ -78,7 +83,23 @@ class Adpost extends \yii\db\ActiveRecord {
         ];
     }
 
-    public function getMobileModel() {
+    public function upload($model) {
+        $filePath = Yii::$app->basePath . '/web/uploads/adpost_photos/' . $model->adpost_id;
+        FileHelper::createDirectory($filePath, $mode = 0775, $recursive = true);
+        foreach ($this->fileName as $file) {
 
+            $file->saveAs($filePath . "/" . $file->baseName . '.' . $file->extension);
+
+            $document = new Document();
+            $document->document_name = $file->name;
+            $document->save_name = $file->name;
+            $document->type = 'adpost';
+            $document->adpost_id = $model->id;
+            $document->created_on = date('Y-m-d H:i:s');
+            $document->created_by = Yii::$app->user->getId();
+            $document->save(false);
+
+        }
+        return TRUE;
     }
 }

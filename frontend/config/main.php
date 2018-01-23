@@ -16,6 +16,13 @@ return [
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
+        'assetManager' => [
+            'bundles' => [
+                'yii\web\JqueryAsset' => [
+                    'jsOptions' => [ 'position' => \yii\web\View::POS_HEAD ],
+                ],
+            ],
+        ],
         'user' => [
             'class' => 'common\components\Users',
             'identityClass' => 'common\models\User',

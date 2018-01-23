@@ -2,12 +2,17 @@
 
 namespace frontend\controllers;
 
+use backend\models\MobileModel;
+use backend\models\Area;
 use Yii;
 use frontend\models\Adpost;
 use frontend\models\AdpostSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
+
 
 /**
  * AdpostController implements the CRUD actions for Adpost model.
@@ -63,9 +68,18 @@ class AdpostController extends Controller {
     public function actionCreate() {
         $this->layout = 'adpost';
         $model = new Adpost();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->adpost_user_id = Yii::$app->user->getId();
+            $model->created_on = date('Y-m-d H:i:s');
+            //var_dump($model->save()); exit;
+            if ($model->save()) {
+                $adModel = Adpost::findOne($model->id);
+                $adModel->adpost_id = "ad" . $model->id;
+                $model->fileName = UploadedFile::getInstances($model, 'fileName');
+                $adModel->save();
+                $model->upload($adModel);
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -83,6 +97,7 @@ class AdpostController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id) {
+        $this->layout = 'adpost';
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -107,6 +122,29 @@ class AdpostController extends Controller {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionGetfieldvalues() {
+        $fieldType = Yii::$app->request->post('fieldType');
+        $id = Yii::$app->request->post('id');
+        if ($fieldType != '') {
+            if ($fieldType == 'adpost-model') {
+                $mobileModelArr = ArrayHelper::map(
+                    MobileModel::find()->where(['category_id' => $id, 'status' => 1])->all(), 'id', 'name'
+                );
+                echo json_encode($mobileModelArr);
+            } else if ($fieldType == 'adpost-location') {
+                $AreaArr = ArrayHelper::map(
+                    Area::find()->where(['city_id' => $id, 'status' => 1])->all(), 'id', 'area'
+
+                );
+                echo json_encode($AreaArr);
+            } else if ($fieldType == 'adpost-zipcode') {
+                $area = Area::findOne($id);
+                echo $area->zipcode;
+                //echo json_encode($AreaArr);
+            }
+        }
     }
 
     /**
