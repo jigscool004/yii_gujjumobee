@@ -24,7 +24,8 @@ class AdpostAssest extends AssetBundle{
         'css/slider.css'
     ];
     public $js = [
-        'js/bootstrap.min.js',
+       // 'js/bootstrap.min.js',
+        'js/slide.js',
         'js/bootbox.min.js',
     ];
     public $depends = [

@@ -25,29 +25,20 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => '#'];
             </div>
         </div>
         <div class="flexslider single-page-slider">
-
+            <?php
+                $photos_dataArr = \yii\helpers\ArrayHelper::map($model->adpostPhotos,'save_name','save_name');
+                $filePath = $model->getFileUrl($model);
+            ?>
             <div class="flex-viewport" style="overflow: hidden; position: relative;">
-                <ul class="slides slide-main"
-                    style="width: 1000%; transition-duration: 0s; transform: translate3d(-3000px, 0px, 0px);">
-                    <li class="" style="width: 750px; float: left; display: block;">
-                        <img alt=""
-                             src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/vlcsnap-0446-06-16-07h11m11s049.png"
-                             title="" style="height:420px" draggable="false"></li>
-                    <li class="" style="width: 750px; float: left; display: block;">
-                        <img alt=""
-                             src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/vlcsnap-0742-07-06-02h27m12s345.png"
-                             title="" style="height:420px" draggable="false"></li>
-                    <li class="" style="width: 750px; float: left; display: block;">
-                        <img alt=""
-                             src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/vlcsnap-0742-07-06-02h27m12s3451.png"
-                             title="" style="height:420px" draggable="false"></li>
-                    <li class="" style="width: 750px; float: left; display: block;">
-                        <img alt=""
-                             src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/vlcsnap-0812-04-29-08h38m11s713.png"
-                             title="" style="height:420px" draggable="false"></li>
-                    <li class="flex-active-slide" style="width: 750px; float: left; display: block;">
-                        <img alt="" src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/bhallaldev.png"
-                             title="" style="height:420px" draggable="false"></li>
+                <ul class="slides slide-main">
+                    <?php
+                    foreach ($photos_dataArr as $key => $photo) {
+                        $activeclass = $key == 0 ? 'flex-active-slide' : '';
+                        ?>
+                        <li class="<?php echo $activeclass ?>">
+                            <?php echo Html::img($filePath .'/'. $photo,['alt' => '','style' => 'height:420px']); ?>
+                        </li>
+                    <?php } ?>
                 </ul>
             </div>
             <ul class="flex-direction-nav">
@@ -57,46 +48,22 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => '#'];
         </div>
     </div>
     <div class="flexslider" id="carousels">
-
-        <div class="flex-viewport" style="overflow: hidden; position: relative;">
-            <ul class="slides slide-thumbnail"
-                style="width: 1000%; transition-duration: 0s; transform: translate3d(0px, 0px, 0px);">
-                <li class="flex-active-slide" style="margin-left: 10px; width: 100px; float: left; display: block;">
-                    <img alt="" draggable="false"
-                         src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/vlcsnap-0446-06-16-07h11m11s049.png"
-                         title="">
-                </li>
-                <li class="" width:100px="" !important;=""
-                "="" style="width: 100px; float: left; display: block;">
-                <img alt="" draggable="false"
-                     src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/vlcsnap-0742-07-06-02h27m12s345.png"
-                     title="">
-                </li>
-                <li class="" width:100px="" !important;=""
-                "="" style="width: 100px; float: left; display: block;">
-                <img alt="" draggable="false"
-                     src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/vlcsnap-0742-07-06-02h27m12s3451.png"
-                     title="">
-                </li>
-                <li class="" width:100px="" !important;=""
-                "="" style="width: 100px; float: left; display: block;">
-                <img alt="" draggable="false"
-                     src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/vlcsnap-0812-04-29-08h38m11s713.png"
-                     title="">
-                </li>
-                <li class="" width:100px="" !important;=""
-                "="" style="width: 100px; float: left; display: block;">
-                <img alt="" draggable="false"
-                     src="http://local.gujjumobi.com/assest/upload/adpost_photos/00000002/bhallaldev.png" title="">
-                </li>
+        <div class="flex-viewport">
+            <ul class="slides slide-thumbnail">
+                <?php
+                foreach ($photos_dataArr as $key => $photo) {
+                    $activeclass = $key == 0 ? 'flex-active-slide' : '';
+                    $style = $key == 0 ? 'style="margin-left:10px;width:100px !important;"':'width:100px !important; "';
+                    ?>
+                    <li class="<?php echo $activeclass; ?>" <?php echo $style?>>
+                        <?php echo Html::img($filePath .'/'. $photo,['alt' => '','draggable' => false,]); ?>
+                    </li>
+                <?php } ?>
 
             </ul>
         </div>
-        <ul class="flex-direction-nav">
-            <li><a class="flex-prev flex-disabled" href="#" tabindex="-1"></a></li>
-            <li><a class="flex-next flex-disabled" href="#" tabindex="-1"></a></li>
-        </ul>
     </div>
+
     <div class="clearfix"></div>
     <div class="ad-box">
         <div class="short-features">

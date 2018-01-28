@@ -8,8 +8,10 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Adpost;
 use Yii;
 use yii\base\InvalidParamException;
+use yii\data\ActiveDataProvider;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -29,8 +31,8 @@ class UserController extends Controller {
                 //'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'logout', 'profile', 'delete','change-password'],
-                        'allow' => true,
+                        'actions' => ['index', 'logout', 'profile', 'delete', 'change-password', 'myads'],
+                        'allow' => TRUE,
                         'roles' => ['@'],
                     ],
                 ],
@@ -54,7 +56,7 @@ class UserController extends Controller {
             ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : NULL,
             ],
         ];
     }
@@ -128,16 +130,30 @@ class UserController extends Controller {
         $model = new ChangePassword();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePwd()) {
-             $this->redirect(['user/change-password']);
+            $this->redirect(['user/change-password']);
         } else {
-            return $this->render('changepassword',[
+            return $this->render('changepassword', [
                 'model' => $model,
             ]);
         }
     }
 
+    public function actionMyads() {
+        $dataProvider = new ActiveDataProvider([
+                'query' => Adpost::find()->where(['is_deleted' => 0, 'status' => 1])->orderBy('id DESC'),
+                'pagination' => [
+                    'pagesize' => 10,
+                ],
+            ]
+        );
+
+        return $this->render('myads',[
+           'dataProvider' => $dataProvider
+        ]);
+    }
+
     protected function findModel($id) {
-        if (($model = User::findOne($id)) !== null) {
+        if (($model = User::findOne($id)) !== NULL) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
