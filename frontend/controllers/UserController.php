@@ -142,7 +142,7 @@ class UserController extends Controller {
         $dataProvider = new ActiveDataProvider([
                 'query' => Adpost::find()->where(['is_deleted' => 0, 'status' => 1])->orderBy('id DESC'),
                 'pagination' => [
-                    'pagesize' => 10,
+                    'pagesize' => 5,
                 ],
             ]
         );

@@ -27,10 +27,20 @@ $filePath = $model->getFileUrl($model);
             <h3><?php echo Html::a($model->adtitle,['adpost/' . $model->id])?></h3>
         </div>
         <div class="ad-info-1">
-            <ul>
+            <ul class="pull-left">
                 <li> <i class="fa fa-map-marker"></i><a href="#"><?php echo $model->adpostCity->name ?></a> </li>
                 <li> <i class="fa fa-clock-o"></i><?php echo date('d-m-Y',strtotime($model->created_on)) ?></li>
             </ul>
+            <div class="pull-right" style="margin-top: 6px;">
+                <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-edit"></i>',
+                    ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
+                        'tooltip', 'data-placement' => 'top', 'title' => 'Edit']) ?>
+                <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-ok-circle"></i>',
+                    ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
+                        'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Sale']) ?>
+                <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-folder-open"></i>',
+                    ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
+                        'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Archive']) ?>
+            </div>
         </div>
     </div>
-

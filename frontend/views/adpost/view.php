@@ -26,8 +26,8 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => '#'];
         </div>
         <div class="flexslider single-page-slider">
             <?php
-                $photos_dataArr = \yii\helpers\ArrayHelper::map($model->adpostPhotos,'save_name','save_name');
-                $filePath = $model->getFileUrl($model);
+            $photos_dataArr = \yii\helpers\ArrayHelper::map($model->adpostPhotos, 'save_name', 'save_name');
+            $filePath = $model->getFileUrl($model);
             ?>
             <div class="flex-viewport" style="overflow: hidden; position: relative;">
                 <ul class="slides slide-main">
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => '#'];
                         $activeclass = $key == 0 ? 'flex-active-slide' : '';
                         ?>
                         <li class="<?php echo $activeclass ?>">
-                            <?php echo Html::img($filePath .'/'. $photo,['alt' => '','style' => 'height:420px']); ?>
+                            <?php echo Html::img($filePath . '/' . $photo, ['alt' => '', 'style' => 'height:420px']); ?>
                         </li>
                     <?php } ?>
                 </ul>
@@ -53,10 +53,10 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => '#'];
                 <?php
                 foreach ($photos_dataArr as $key => $photo) {
                     $activeclass = $key == 0 ? 'flex-active-slide' : '';
-                    $style = $key == 0 ? 'style="margin-left:10px;width:100px !important;"':'width:100px !important; "';
+                    $style = $key == 0 ? 'style="margin-left:10px;width:100px !important;"' : 'width:100px !important; "';
                     ?>
-                    <li class="<?php echo $activeclass; ?>" <?php echo $style?>>
-                        <?php echo Html::img($filePath .'/'. $photo,['alt' => '','draggable' => false,]); ?>
+                    <li class="<?php echo $activeclass; ?>" <?php echo $style ?>>
+                        <?php echo Html::img($filePath . '/' . $photo, ['alt' => '', 'draggable' => FALSE,]); ?>
                     </li>
                 <?php } ?>
 
@@ -149,23 +149,29 @@ Jigar Prajapati</a></span>
 
             <div class="contact white-bg">
                 <?php if (Yii::$app->user->isGuest == FALSE && Yii::$app->user->getId() === $model->adpost_user_id) : ?>
-                    <div class="pull-left">
-                        <div class="col-md-2">
-                            <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-edit"></i>',
-                                ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
-                                    'tooltip', 'data-placement' => 'top', 'title' => 'Edit']) ?>
-                        </div>
-                        <div class="col-md-2">
-                            <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-ok-circle"></i>',
-                                ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
-                                    'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Sale']) ?>
-                        </div>
-                        <div class="col-md-2">
-                            <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-folder-open"></i>',
-                                ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
-                                    'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Archive']) ?>
+                    <div class="pull-left" style="margin-left: 10px;">
+                        <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-edit"></i>',
+                            ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
+                                'tooltip', 'data-placement' => 'top', 'title' => 'Edit']) ?>
 
-                        </div>
+                        <?php
+                        if ($model->is_sold == 0) {
+                            echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-ok-circle"></i>',
+                                ['adpost/update/' . $model->id], ['class' => 'manage-sale-status', 'data-toggle' =>
+                                    'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Sold', 'data-id'
+                                => $model->id, 'data-key' => 1]);
+                        } else {
+                            echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-ok-circle"></i>',
+                                ['adpost/update/' . $model->id], ['class' => 'manage-sale-status', 'data-toggle' =>
+                                    'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Unsold', 'data-id' => $model->id, 'data-key' => 0]);
+                        }
+                        ?>
+
+                        <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-folder-open"></i>',
+                            ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
+                                'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Archive']) ?>
+
+
                     </div>
                 <?php endif; ?>
                 <div class="pull-right" style="margin-top:-5px;">
@@ -184,7 +190,7 @@ Jigar Prajapati</a></span>
                                     <i class="fa fa-envelope"></i>
                                 </span>
                             </td>
-                          </tr>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -196,6 +202,11 @@ Jigar Prajapati</a></span>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.manage-sale-status').on('click',function (e) {
+            e.preventDefault();
+            console.log($(this));
+        });
+
         $('[data-toggle="tooltip"]').tooltip();
         $('#carousels').flexslider({
             animation: "slide",

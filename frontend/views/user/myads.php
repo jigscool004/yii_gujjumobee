@@ -23,7 +23,8 @@ use yii\widgets\LinkPager;
             'id' => 'list-wrapper',
         ],
         'itemOptions' => ['class' => 'col-md-6 col-sm-6 col-xs-12'],
-        'layout' => "{items}\n{summary}",
+        'layout' => "<div class='col-md-12 ' style='margin-bottom: 10px;'><div class='clearfix pull-right'>{summary}</div></div>\n{items}
+                       <div class='clearfix'></div>",
         'itemView' => '_list_item',
     ]);
 
@@ -33,3 +34,8 @@ use yii\widgets\LinkPager;
     ?>
 
 </div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
+</script>
