@@ -2,6 +2,10 @@
 
 namespace frontend\models;
 
+use backend\models\Area;
+use backend\models\City;
+use backend\models\MobileCategory;
+use backend\models\MobileModel;
 use Yii;
 use yii\helpers\FileHelper;
 use frontend\models\Document;
@@ -83,8 +87,17 @@ class Adpost extends \yii\db\ActiveRecord {
         ];
     }
 
+    public function getFilePath($model) {
+        return Yii::$app->basePath . '/web/uploads/adpost_photos/' . $model->adpost_id;
+    }
+
+    public function getFileUrl($model) {
+        return Yii::$app->urlManager->baseUrl  . '/frontend/web/uploads/adpost_photos/' . $model->adpost_id;
+    }
+
+
     public function upload($model) {
-        $filePath = Yii::$app->basePath . '/web/uploads/adpost_photos/' . $model->adpost_id;
+        $filePath = $this->getFilePath($model);
         FileHelper::createDirectory($filePath, $mode = 0775, $recursive = true);
         foreach ($this->fileName as $file) {
 
@@ -101,5 +114,25 @@ class Adpost extends \yii\db\ActiveRecord {
 
         }
         return TRUE;
+    }
+
+    public function getMobileModel() {
+        return $this->hasOne(MobileModel::className(),['id' => 'model']);
+    }
+
+    public function getMobileCategory() {
+        return $this->hasOne(MobileCategory::className(),['id' => 'category']);
+    }
+
+    public function getAdpostArea() {
+        return $this->hasOne(Area::className(),['id' => 'location']);
+    }
+
+    public function getAdpostCity() {
+        return $this->hasOne(City::className(),['id' => 'city']);
+    }
+
+    public function getAdpostPhotos() {
+        return $this->hasMany(Document::className(),['adpost_id' => 'id']);
     }
 }

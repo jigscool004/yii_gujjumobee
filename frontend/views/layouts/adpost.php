@@ -6,9 +6,9 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
-use frontend\assets\AppAsset;
+use frontend\assets\AdpostAssest;
 
-AppAsset::register($this);
+AdpostAssest::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -30,43 +30,23 @@ AppAsset::register($this);
     <?php echo $this->render('_header')?>
     <!-- menu end -->
 </div>
-
+<div class="small-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-link">
+            <?= Breadcrumbs::widget([
+                'itemTemplate' => "<li>{link}  </li>\n", // template for all link
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                'options' => ['class' => '']
+            ]) ?>
+        </div>
+    </div>
+</div>
 <div class="main-content-area clearfix">
     <section class="custom-padding-3 gray">
         <div class="container">
             <div class="row">
-                <div class="col-md-8 col-lg-8 col-xs-12 col-sm-12">
-                    <div class="post-ad-form "><?= $content ?></div>
-                </div>
-                <div class="col-md-4 col-xs-12 col-sm-12">
-                    <!-- Sidebar Widgets -->
-                    <div class="blog-sidebar">
-                        <!-- Categories -->
-                        <div class="widget">
-                            <div class="widget-heading">
-                                <h4 class="panel-title"><a>Saftey Tips </a></h4>
-                            </div>
-                            <div class="widget-content">
-                                <p class="lead">Posting an ad on <a href="#">AdForest.com</a> is free! However, all ads must follow our rules:</p>
-                                <ol>
-                                    <li>Make sure you post in the correct category.</li>
-                                    <li>Do not post the same ad more than once or repost an ad within 48 hours.</li>
-                                    <li>Do not upload pictures with watermarks.</li>
-                                    <li>Do not post ads containing multiple items unless it's a package deal.</li>
-                                    <li>Do not put your email or phone numbers in the title or description.</li>
-                                    <li>Make sure you post in the correct category.</li>
-                                    <li>Do not post the same ad more than once or repost an ad within 48 hours.</li>
-                                    <li>Do not upload pictures with watermarks.</li>
-                                    <li>Do not post ads containing multiple items unless it's a package deal.</li>
-                                </ol>
-                            </div>
-                        </div>
-                        <!-- Latest News -->
-                    </div>
-                    <!-- Sidebar Widgets End -->
-                </div>
+                <?= $content ?>
             </div>
-
         </div>
     </section>
 </div>

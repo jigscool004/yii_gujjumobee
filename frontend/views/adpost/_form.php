@@ -9,12 +9,19 @@ use backend\models\Area;
 use yii\helpers\ArrayHelper;
 use kartik\file\FileInput;
 use yii\helpers\Url;
+use kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\Adpost */
 /* @var $form yii\widgets\ActiveForm */
-?>
 
+?>
+<style>
+    .file-preview .btn-xs {
+        padding: 2px 0px 2px 5px;
+        margin-top: 5px;
+    }
+</style>
 <div class="adpost-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
@@ -26,71 +33,70 @@ use yii\helpers\Url;
     </div>
     <div class="row">
         <div class="col-md-6 col-lg-6 col-xs-12 col-sm-12">
-            <?= $form->field($model, 'category')->dropDownList(
-                ArrayHelper::map(MobileCategory::find()->where(['status' => 1])->All(), 'id', 'name'),
-                ['prompt' => 'Select Category', 'class' => 'category depentantDropdown form-control', 'target-id' => 'adpost-model']
-            ); ?>
+            <?= $form->field($model, 'category')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(MobileCategory::find()->where(['status' => 1])->All(), 'id', 'name'),
+                'options' => ['placeholder' => 'Select a Category ...', 'class' => 'depentantDropdown', 'target-id' =>
+                    'adpost-model'],
+                'pluginOptions' => [
+                    'allowClear' => TRUE
+                ],
+            ]); ?>
         </div>
         <div class="col-md-6 col-lg-6 col-xs-12 col-sm-12">
-            <?= $form->field($model, 'model')->dropDownList(
-                ArrayHelper::map(MobileModel::find()->where(['status' => 1])->All(), 'id', 'name'),
-                ['prompt' => 'Select Model']
-            ); ?>
+            <?= $form->field($model, 'model')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(MobileModel::find()->where(['status' => 1])->All(), 'id', 'name'),
+                'options' => ['placeholder' => 'Select a Model ...'],
+                'pluginOptions' => [
+                    'allowClear' => TRUE
+                ],
+            ]);
+
+
+            ?>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
-            <?php // $form->field($model, 'fileName[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
             <?php
+            $filePath = $model->getFileUrl($model);
+            //             $previewArr = array_map(function($key) use ($filePath) {
+            //                                return Html::img($filePath . "/" . $key);
+            //                                },
+            //                                ArrayHelper::map($model->adpostPhotos,'save_name','save_name')
+            //                           );
+            $previewPhotoArr = $previewPhotoConfigArr = array();
+            if (isset($model->adpostPhotos) && count($model->adpostPhotos) > 0) {
+                foreach ($model->adpostPhotos as $key => $document) {
+                    $previewPhotoArr[$key] = Html::img($filePath . '/' . $document->save_name, ['data-id' =>
+                        $document->id]);
+                    $previewPhotoConfigArr[$key] = [
+                        'caption' => $document->document_name,
+                        'key' => $document->id,
+                        // 'width'   => '120px'
+                        'url' => ["/adpost/adpostphotodelete/" . $document->id],
+                    ];
+                }
+            }
 
-            echo $form->field($model,'fileName[]')->widget(FileInput::classname(), [
+            echo $form->field($model, 'fileName[]')->widget(FileInput::classname(), [
                 'options' => ['accept' => 'image/*', 'multiple' => TRUE],
                 'pluginOptions' => [
                     'uploadUrl' => Url::to(['/site/file-upload']),
                     'allowedFileExtensions' => ['jpg', 'gif', 'png'], 'showUpload' => FALSE,
                     'browseClass' => 'btn btn-theme btn-primary btn-xs ', 'browseLabel' => 'Select Photo',
                     'maxFileCount' => 5,
-                    'initialPreview' => [
-                        //   Html::img($model->getImageUrl())
-                    ],
-                    /*'initialPreviewConfig' => [
-                        [
-                            'caption' => $model->photo,
-                            //'width' => "120px",
-                            'url' => ["/user/delete"],
-                            'key' => $model->id,
-                        ],
-
-                    ],*/
-
-                    //  'initialCaption'=> $model->photo,
+                    'initialPreview' => $previewPhotoArr,
+                    'initialPreviewConfig' => $previewPhotoConfigArr,
                     'showRemove' => FALSE,
-                    'layoutTemplates' => ['footer' => ''],
+                    'overwriteInitial' => FALSE,
+//                    'fileActionSettings' => [
+//                        'removeIcon' => '<span class="icon">delete</span> ',
+//                    ],
+                    'layoutTemplates' => ['footer' => '<button type="button" onclick="removePhoto(this); return false;"
+class="btn btn-danger btn-xs pull-right removeImage"><i class="glyphicon glyphicon-trash"></i></button>'],
                     'showPreview' => TRUE,
                     'showCaption' => FALSE,],
             ]);
-//             echo FileInput::widget([
-//                 'model' => $model,
-//                 'attribute' => 'fileName[]',
-//                 'options' => [
-//                     'multiple' => TRUE
-//                 ],
-//                 'pluginOptions' => [
-//                     'uploadUrl' => Url::to(['/site/file-upload']),
-//                     'allowedFileExtensions' => ['jpg', 'gif', 'png'],
-//                     'showUpload' => FALSE,
-//                     'browseClass' => 'btn btn-theme btn-primary btn-xs ',
-//                     'browseLabel' => 'Select Photo',
-//                     'maxFileCount' => 5,
-//                     'initialPreview' => [
-//                         // Html::img($model->getImageUrl())
-//                     ],
-//                     'showRemove' => FALSE,
-//                     'showPreview' => TRUE,
-//                     'showCaption' => FALSE,
-//                     'layoutTemplates' => ['footer' => '']
-//                 ]
-//             ]);
             ?>
         </div>
     </div>
@@ -115,16 +121,24 @@ use yii\helpers\Url;
     </div>
     <div class="row">
         <div class="col-md-6 col-lg-6 col-xs-12 col-sm-12">
-            <?= $form->field($model, 'city')->dropDownList(
-                ArrayHelper::map(City::find()->where(['status' => 1])->All(), 'id', 'name'),
-                ['prompt' => 'Select City', 'class' => 'depentantDropdown form-control', 'target-id' => 'adpost-location']
-            ); ?>
+            <?= $form->field($model, 'city')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(City::find()->where(['status' => 1])->All(), 'id', 'name'),
+                'options' => ['placeholder' => 'Select a City ...', 'class' => 'depentantDropdown form-control', 'target-id' => 'adpost-location'],
+                'pluginOptions' => [
+                    'allowClear' => TRUE
+                ],
+            ]);
+            ?>
         </div>
         <div class="col-md-6 col-lg-6 col-xs-12 col-sm-12">
-            <?= $form->field($model, 'location')->dropDownList(
-                ArrayHelper::map(Area::find()->where(['status' => 1])->All(), 'id', 'area'),
-                ['prompt' => 'Select Location', 'class' => 'depentantDropdown form-control', 'target-id' => 'adpost-zipcode']
-            ) ?>
+            <?= $form->field($model, 'location')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Area::find()->where(['status' => 1])->All(), 'id', 'area'),
+                'options' => ['placeholder' => 'Select a City ...', 'class' => 'depentantDropdown form-control', 'target-id' => 'adpost-zipcode'],
+                'pluginOptions' => [
+                    'allowClear' => TRUE
+                ],
+            ]);
+            ?>
         </div>
     </div>
     <div class="row">
@@ -139,7 +153,71 @@ use yii\helpers\Url;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+/*$this->registerJs("
+    function removePhoto(button) {
+        var id = $(button).siblings('.kv-file-content').find('img').attr('data-id');
+        bootbox.confirm({
+            message: \"This is a confirm with custom button text and color! Do you like it?\",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax({
+                        url: '".Yii::$app->urlManager->createUrl('adpost/adpostphotodelete/'). "' + id,
+                        method: 'POST',
+                        dataType: 'json',
+                        success: function (data) {
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+", Yii\web\View::POS_READY); */
+?>
 <script type="text/javascript">
+    function removePhoto(button) {
+        var id = $(button).siblings('.kv-file-content').find('img').attr('data-id');
+        bootbox.confirm({
+            message: "Are you sure..?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax({
+                        url: '<?php echo Yii::$app->urlManager->createUrl('adpost/adpostphotodelete') ?>/' + id,
+                        method: 'POST',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data == 1) {
+                                $(button).parent('.file-preview-initial').remove();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
     jQuery(document).ready(function () {
         $(".depentantDropdown").on("change", function () {
             var $this = $(this),

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use backend\models\MobileModel;
 use backend\models\Area;
+use frontend\models\Document;
 use Yii;
 use frontend\models\Adpost;
 use frontend\models\AdpostSearch;
@@ -36,14 +37,15 @@ class AdpostController extends Controller {
      * Lists all Adpost models.
      * @return mixed
      */
-    public function actionIndex() {
-        $searchModel = new AdpostSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+    public function actionIndex($id) {
+        echo $id;
+//        $searchModel = new AdpostSearch();
+//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//
+//        return $this->render('index', [
+//            'searchModel' => $searchModel,
+//            'dataProvider' => $dataProvider,
+//        ]);
     }
 
     /**
@@ -55,6 +57,7 @@ class AdpostController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id) {
+        $this->layout = 'adpost';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -100,8 +103,13 @@ class AdpostController extends Controller {
         $this->layout = 'adpost';
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->updated_on = date('Y-m-d H:i:s');
+            if ($model->save()) {
+                $model->fileName = UploadedFile::getInstances($model, 'fileName');
+                $model->upload($model);
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
@@ -145,6 +153,23 @@ class AdpostController extends Controller {
                 //echo json_encode($AreaArr);
             }
         }
+    }
+
+    public function actionAdpostphotodelete($id) {
+        $document = Document::findOne($id);
+        $filePath = $document->adpostDetail->getFilePath($document->adpostDetail);
+        $photoUrl = $filePath . '/' . $document->save_name;
+        if (file_exists($photoUrl)) {
+            unlink($photoUrl);
+            if ($document->delete()) {
+                echo 1;
+            } else {
+                echo 0;
+            }
+        } else {
+            echo 0;
+        }
+
     }
 
     /**
