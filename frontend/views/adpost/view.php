@@ -161,15 +161,25 @@ Jigar Prajapati</a></span>
                                     'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Sold', 'data-id'
                                 => $model->id, 'data-key' => 1]);
                         } else {
-                            echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-ok-circle"></i>',
+                            echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-ban-circle"></i>',
                                 ['adpost/update/' . $model->id], ['class' => 'manage-sale-status', 'data-toggle' =>
                                     'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Unsold', 'data-id' => $model->id, 'data-key' => 0]);
                         }
                         ?>
 
-                        <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-folder-open"></i>',
-                            ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
-                                'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Archive']) ?>
+                        <?php
+                          if ($model->is_archived == 0) {
+                              echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-folder-open"></i>',
+                                  ['adpost/update/' . $model->id], ['class' => 'manage-adpost-archive', 'data-toggle' =>
+                                      'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Archive', 'data-id'
+                                  => $model->id, 'data-key' => 1]);
+                          }  else {
+                              echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-folder-close"></i>',
+                                  ['adpost/update/' . $model->id], ['class' => 'manage-adpost-archive', 'data-toggle' =>
+                                      'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Unarchive', 'data-id'
+                                  => $model->id, 'data-key' => 0]);
+                          }
+                         ?>
 
 
                     </div>
@@ -202,9 +212,110 @@ Jigar Prajapati</a></span>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+
+
+        $('.manage-adpost-archive').on('click',function (e) {
+            e.preventDefault();
+            var $this = $(this),
+                isArchiveValue = $this.attr('data-key');
+            dataString = {
+                'adpost_id':$this.attr('data-id'),
+                'is_archived' : isArchiveValue
+            };
+
+            bootbox.confirm({
+                message: "Are you sure..?",
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: '<?php echo Yii::$app->urlManager->createUrl('adpost/managearchivestatus') ?>',
+                            method: 'POST',
+                            data:dataString,
+                            //dataType: 'json',
+                            success: function (data) {
+                                if (data == 1) {
+                                    newIsArchiveValue = isArchiveValue == 1 ? 0 : 1;
+                                    title = isArchiveValue == 1 ? 'Mark as UnArchive' : 'Mark as Archive';
+                                    $this.attr({
+                                        'data-key' : newIsArchiveValue,
+                                        'title' : title,
+                                        'data-original-title':title
+                                    });
+                                    $iconI = $this.find('i');
+                                    if ($iconI.hasClass('glyphicon-folder-open')) {
+                                        $iconI.removeClass('glyphicon-folder-open').addClass('glyphicon-folder-close');
+                                    } else if ($iconI.hasClass('glyphicon-folder-close')) {
+                                        $iconI.removeClass('glyphicon-folder-close').addClass('glyphicon-folder-open');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+        });
+
         $('.manage-sale-status').on('click',function (e) {
             e.preventDefault();
-            console.log($(this));
+            var $this = $(this),
+                isSoldValue = $this.attr('data-key');
+                dataString = {
+                    'adpost_id':$this.attr('data-id'),
+                    'is_sold' : isSoldValue
+            };
+
+            bootbox.confirm({
+                message: "Are you sure..?",
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: '<?php echo Yii::$app->urlManager->createUrl('adpost/managestatus') ?>',
+                            method: 'POST',
+                            data:dataString,
+                            //dataType: 'json',
+                            success: function (data) {
+                                if (data == 1) {
+                                    newIsSoldValue = isSoldValue == 1 ? 0 : 1;
+                                    title = isSoldValue == 1 ? 'Mark as Unsold' : 'Mark as sold';
+                                    $this.attr({
+                                        'data-key' : newIsSoldValue,
+                                        'title' : title,
+                                        'data-original-title':title
+                                    });
+                                    $iconI = $this.find('i');
+                                    if ($iconI.hasClass('glyphicon-ok-circle')) {
+                                        $iconI.removeClass('glyphicon-ok-circle').addClass('glyphicon-ban-circle');
+                                    } else if ($iconI.hasClass('glyphicon-ban-circle')) {
+                                        $iconI.removeClass('glyphicon-ban-circle').addClass('glyphicon-ok-circle');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
         });
 
         $('[data-toggle="tooltip"]').tooltip();

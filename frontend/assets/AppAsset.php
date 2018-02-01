@@ -20,6 +20,7 @@ class AppAsset extends AssetBundle {
         'css/skins/minimal/minimal.css',
     ];
     public $js = [
+        'js/bootbox.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

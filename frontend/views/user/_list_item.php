@@ -35,12 +35,32 @@ $filePath = $model->getFileUrl($model);
                 <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-edit"></i>',
                     ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
                         'tooltip', 'data-placement' => 'top', 'title' => 'Edit']) ?>
-                <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-ok-circle"></i>',
-                    ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
-                        'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Sale']) ?>
-                <?php echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-folder-open"></i>',
-                    ['adpost/update/' . $model->id], ['class' => '', 'data-toggle' =>
-                        'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Archive']) ?>
+                <?php
+                if ($model->is_sold == 0) {
+                    echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-ok-circle"></i>',
+                        ['adpost/update/' . $model->id], ['class' => 'manage-sale-status', 'data-toggle' =>
+                            'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Sold', 'data-id'
+                        => $model->id, 'data-key' => 1]);
+                } else {
+                    echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-ban-circle"></i>',
+                        ['adpost/update/' . $model->id], ['class' => 'manage-sale-status', 'data-toggle' =>
+                            'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Unsold', 'data-id' => $model->id, 'data-key' => 0]);
+                }
+                ?>
+
+                <?php
+                if ($model->is_archived == 0) {
+                    echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-folder-open"></i>',
+                        ['adpost/update/' . $model->id], ['class' => 'manage-adpost-archive', 'data-toggle' =>
+                            'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Archive', 'data-id'
+                        => $model->id, 'data-key' => 1]);
+                }  else {
+                    echo Html::a('<i aria-hidden="true" class="glyphicon glyphicon-folder-close"></i>',
+                        ['adpost/update/' . $model->id], ['class' => 'manage-adpost-archive', 'data-toggle' =>
+                            'tooltip', 'data-placement' => 'top', 'title' => 'Mark as Unarchive', 'data-id'
+                        => $model->id, 'data-key' => 0]);
+                }
+                ?>
             </div>
         </div>
     </div>

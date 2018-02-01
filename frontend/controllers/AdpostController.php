@@ -172,6 +172,30 @@ class AdpostController extends Controller {
 
     }
 
+    public function actionManagestatus() {
+        if (isset($_REQUEST['adpost_id'],$_REQUEST['is_sold']) && $_REQUEST['adpost_id'] > 0) {
+             $adpost = Adpost::findOne($_REQUEST['adpost_id']);
+             $adpost->is_sold = $_REQUEST['is_sold'];
+             $adpost->updated_on = date('Y-m-d H:i:s');
+             echo (int) $adpost->save();
+        } else {
+            echo 0;
+        }
+    }
+
+    public function actionManagearchivestatus() {
+        if (isset($_REQUEST['adpost_id'],$_REQUEST['is_archived']) && $_REQUEST['adpost_id'] > 0) {
+             $adpost = Adpost::findOne($_REQUEST['adpost_id']);
+             $adpost->is_archived = $_REQUEST['is_archived'];
+             $adpost->updated_on = date('Y-m-d H:i:s');
+             echo (int) $adpost->save();
+        } else {
+            echo 0;
+        }
+    }
+
+
+
     /**
      * Finds the Adpost model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -31,7 +31,7 @@ class UserController extends Controller {
                 //'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'logout', 'profile', 'delete', 'change-password', 'myads'],
+                        'actions' => ['index', 'logout', 'profile', 'delete', 'change-password', 'myads', 'archivesad','mysoldads'],
                         'allow' => TRUE,
                         'roles' => ['@'],
                     ],
@@ -138,18 +138,39 @@ class UserController extends Controller {
         }
     }
 
-    public function actionMyads() {
+    public function actionMyads($type = '') {
+
+        if ($type == 'archive') {
+            $title = 'My Archived Ads';
+            $whereClauseArr = ['is_deleted' => 0, 'status' => 1, 'is_archived' => 1, 'is_sold' => 0];
+        } else if ($type == 'sold') {
+            $title = 'My Sold Ads';
+            $whereClauseArr = ['is_deleted' => 0, 'status' => 1, 'is_sold' => 1];
+        } else {
+            $title = 'My Ads';
+            $whereClauseArr = ['is_deleted' => 0, 'status' => 1, 'is_archived' => 0, 'is_sold' => 0];
+        }
+
         $dataProvider = new ActiveDataProvider([
-                'query' => Adpost::find()->where(['is_deleted' => 0, 'status' => 1])->orderBy('id DESC'),
+                'query' => Adpost::find()->where($whereClauseArr)->orderBy('id DESC'),
                 'pagination' => [
                     'pagesize' => 5,
                 ],
             ]
         );
 
-        return $this->render('myads',[
-           'dataProvider' => $dataProvider
+        return $this->render('myads', [
+            'dataProvider' => $dataProvider,
+            'title' => $title
         ]);
+    }
+
+    public function actionArchivesad() {
+        return $this->actionMyads('archive');
+    }
+
+    public function actionMysoldads() {
+        return $this->actionMyads('sold');
     }
 
     protected function findModel($id) {
