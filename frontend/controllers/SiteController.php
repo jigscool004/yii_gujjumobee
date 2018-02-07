@@ -69,6 +69,7 @@ class SiteController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
+        $this->layout = 'homepage';
         return $this->render('index');
     }
 

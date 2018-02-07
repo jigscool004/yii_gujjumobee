@@ -23,7 +23,7 @@ $this->title = $title;
             'id' => 'list-wrapper',
         ],
         'itemOptions' => ['class' => 'col-md-6 col-sm-6 col-xs-12'],
-        'layout' => "<div class='col-md-12 ' style='margin-bottom: 10px;'><div class='clearfix pull-right'>{summary}</div></div>\n{items}
+        'layout' => "<div class='filter-brudcrums' style='margin-bottom: 10px;'>{summary}</div>\n{items}
                        <div class='clearfix'></div>",
         'itemView' => '_list_item',
     ]);

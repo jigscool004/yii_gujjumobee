@@ -13,6 +13,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\data\ActiveDataProvider;
 
 
 /**
@@ -24,6 +25,20 @@ class AdpostController extends Controller {
      */
     public function behaviors() {
         return [
+            /*'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error', 'signup'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['logout', 'index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],*/
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -195,6 +210,24 @@ class AdpostController extends Controller {
     }
 
 
+    public function actionResult() {
+        $this->layout = 'homepage';
+        $id = Yii::$app->request->getQueryParam('id');
+        $keyword = Yii::$app->request->getQueryParam('keyword');
+
+        $dataProvider = new ActiveDataProvider([
+                'query' => Adpost::find()->orderBy('id DESC'),
+                'pagination' => [
+                    'pagesize' => 10,
+                ],
+            ]
+        );
+        return $this->render('result',[
+            'id' => $id,
+            'keyword' => $keyword,
+            'dataProvider' => $dataProvider
+        ]);
+    }
 
     /**
      * Finds the Adpost model based on its primary key value.

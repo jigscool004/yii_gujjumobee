@@ -1,53 +1,80 @@
 <?php
 
 /* @var $this yii\web\View */
+use kartik\widgets\Select2;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use backend\models\MobileCategory;
 
-$this->title = 'My Yii Application';
+$this->title = 'Gujjumobi | Home';
+$mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
+
+$mobileCategory = MobileCategory::find()->from('mobile_category t')->select(['t.name', 't.id', 'COUNT(a.id) AS total_ads'])
+    ->leftJoin('adpost a', 'a.category = t.id AND a.status = 1 AND a.is_sold = 0 AND a.is_archived = 0 AND a.is_deleted = 0')->where(['t.status' =>
+        1])
+    ->groupBy('t.id')->all();
+
 ?>
-<div class="site-index">
-
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
+<div class="main-search parallex" style="height: auto;">
+    <div class="container">
         <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+            <div class="col-md-12">
+                <div class="main-search-title">
+                    <h1>Find Whatever Your Want?</h1>
+                    <!-- <p>Search <strong>267,241</strong> new ads - 83 added today</p> -->
+                </div>
+                <?php $form = ActiveForm::begin(['id' => 'serach']); ?>
+                <div class="search-section">
+                    <div id="form-panel">
+                        <div class="col-md-4">
+                            <?= Select2::widget([
+                                'name' => 'category',
+                                'attribute' => 'state_2',
+                                'data' => ArrayHelper::map($mobilCategoryArr, 'id', 'name'),
+                                'options' => ['placeholder' => 'Select a Category ...', 'class' => 'category form-control select2-hidden-accessible'],
+                                'pluginOptions' => [
+                                    'allowClear' => TRUE
+                                ],
+                            ]);
+                            ?>
+                        </div>
+                        <div class="col-md-6">
+                            <?php
+                            echo Html::textInput('keyword', '', ['class' => 'form-control']);
+                            ?>
+                        </div>
+                        <div class="col-md-2">
+                            <?= Html::submitButton('Search',
+                                ['class' => 'btn btn-danger btn-sm btn-block', 'name' => 'Search', 'style' => 'background-color: #2d343d;
+                                border-color: #2d343d;padding:8px']) ?>
+                        </div>
+                        <div class="clearfix"></div>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                    </div>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+                </div>
+                <?php ActiveForm::end(); ?>
             </div>
         </div>
-
+    </div>
+    <div class="main-content-area clearfix">
+        <div class="custom-padding gray">
+            <div class="container">
+                <div class="row">
+                    <?php foreach ($mobileCategory as $key => $mc) { ?>
+                        <div class="col-md-3 col-xs-12 col-sm-6">
+                            <div class="box">
+                                <?php echo Html::img('@web/images/mobile.png',['alt' => 'GujjuMobi'])?>
+                                <h4>
+                                    <?php echo Html::a($mc->name,['adpost/result/' .$mc->id ])?>
+                                </h4>
+                                <strong><?php echo $mc->total_ads?> Ads</strong>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

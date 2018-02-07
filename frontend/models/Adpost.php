@@ -6,6 +6,7 @@ use backend\models\Area;
 use backend\models\City;
 use backend\models\MobileCategory;
 use backend\models\MobileModel;
+use common\models\User;
 use Yii;
 use yii\helpers\FileHelper;
 use frontend\models\Document;
@@ -134,5 +135,9 @@ class Adpost extends \yii\db\ActiveRecord {
 
     public function getAdpostPhotos() {
         return $this->hasMany(Document::className(),['adpost_id' => 'id']);
+    }
+
+    public function getAdpostUser() {
+        return $this->hasOne(User::className(),['id' => 'adpost_user_id']);
     }
 }
