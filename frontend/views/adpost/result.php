@@ -12,8 +12,11 @@ use yii\widgets\ActiveForm;
 use backend\models\MobileCategory;
 use yii\widgets\ListView;
 use yii\widgets\LinkPager;
+use yii\helpers\Url;
+use yii\widgets\Pjax;
 $this->title = 'Gujjumobi | Home';
 $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
+
 ?>
 <div id="search-section">
     <div class="container">
@@ -25,7 +28,7 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
                             'name' => 'category',
                             'value' => $id,
                             'data' => ArrayHelper::map($mobilCategoryArr, 'id', 'name'),
-                            'options' => ['placeholder' => 'Select a Category ...', 'class' => 'category form-control select2-hidden-accessible'],
+                            'options' => ['placeholder' => 'Select a Category ...', 'class' => 'category form-control select2-hidden-accessible','id' => 'category'],
                             'pluginOptions' => [
                                 'allowClear' => TRUE
                             ],
@@ -33,7 +36,7 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
                         ?>
                     </div>
                     <div class="col-md-6 col-xs-12 col-sm-4 ">
-                        <?php echo Html::textInput('keyword', $keyword, ['class' => 'form-control','placeholder' => "Enter your keyword"]); ?>
+                        <?php echo Html::textInput('keyword', $keyword, ['class' => 'form-control','placeholder' => "Enter your keyword",'id' => 'keyword']); ?>
                     </div>
                     <div class="col-md-3 col-xs-12 col-sm-4 ">
                         <?= Html::submitButton('Search',
@@ -51,7 +54,7 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
         <div class="row">
             <div class="col-md-12 col-lg-12 col-sx-12">
                 <?php
-
+                Pjax::begin(['id' => 'adpostlist-grid']);
                 echo ListView::widget([
                     'dataProvider' => $dataProvider,
                     'options' => [
@@ -60,7 +63,7 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
                         'id' => 'list-wrapper',
                     ],
                 //    'itemOptions' => ['class' => 'col-md-6 col-sm-6 col-xs-12'],
-                    'layout' => "<div class='filter-brudcrums' style='margin-bottom: 10px;'>{summary}</div>\n <ul class='list-unstyled'>{items}</ul>
+                    'layout' => "<div class='filter-brudcrums' style='margin-bottom: 10px;'>{summary}</div><div class=\"clearfix\"></div>    <ul class='list-unstyled'>{items}</ul>
                        <div class='clearfix'></div>",
                     'itemView' => '_list_item',
                 ]);
@@ -68,8 +71,26 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
                 echo LinkPager::widget([
                     'pagination' => $dataProvider->pagination
                 ]);
+                Pjax::end();
                 ?>
             </div>
         </div>
     </div>
 </section>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $('#serach').on('submit',function (e) {
+            e.preventDefault();
+            var $this = $(this);
+                var options = {
+                    type: 'get',
+                    url: $this.attr('action'),
+                    container: '#adpostlist-grid', // id to update content
+                    data: $this.serialize()
+                };
+            $.pjax.reload(options);
+        });
+        });
+</script>

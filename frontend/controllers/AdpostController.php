@@ -212,11 +212,25 @@ class AdpostController extends Controller {
 
     public function actionResult() {
         $this->layout = 'homepage';
-        $id = Yii::$app->request->getQueryParam('id');
+        $id = Yii::$app->request->getQueryParam('category');
         $keyword = Yii::$app->request->getQueryParam('keyword');
+        $query = Adpost::find()->orderBy('id DESC');
+        $serachArr = [];
+        if ($id > 0) {
+            $query->andFilterCompare('category', $id,'=');
+            //$serachArr['category'] = $id;
+        }
 
+        if ($keyword != '') {
+            $serachArr['adtitle'] = $keyword;
+            $query->andFilterWhere(['like','adtitle',$keyword]);
+        }
+
+        if (count($serachArr) > 0) {
+            //$query->where($serachArr);
+        }
         $dataProvider = new ActiveDataProvider([
-                'query' => Adpost::find()->orderBy('id DESC'),
+                'query' => $query,
                 'pagination' => [
                     'pagesize' => 10,
                 ],

@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use backend\models\MobileCategory;
+use yii\helpers\Url;
 
 $this->title = 'Gujjumobi | Home';
 $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
@@ -24,15 +25,15 @@ $mobileCategory = MobileCategory::find()->from('mobile_category t')->select(['t.
                     <h1>Find Whatever Your Want?</h1>
                     <!-- <p>Search <strong>267,241</strong> new ads - 83 added today</p> -->
                 </div>
-                <?php $form = ActiveForm::begin(['id' => 'serach']); ?>
+                <?php $form = ActiveForm::begin(['id' => 'serach', 'method' => 'get']); ?>
                 <div class="search-section">
                     <div id="form-panel">
                         <div class="col-md-4">
                             <?= Select2::widget([
                                 'name' => 'category',
-                                'attribute' => 'state_2',
+                                'attribute' => 'category',
                                 'data' => ArrayHelper::map($mobilCategoryArr, 'id', 'name'),
-                                'options' => ['placeholder' => 'Select a Category ...', 'class' => 'category form-control select2-hidden-accessible'],
+                                'options' => ['placeholder' => 'Select a Category ...', 'class' => 'category form-control select2-hidden-accessible', 'id' => 'category'],
                                 'pluginOptions' => [
                                     'allowClear' => TRUE
                                 ],
@@ -41,7 +42,7 @@ $mobileCategory = MobileCategory::find()->from('mobile_category t')->select(['t.
                         </div>
                         <div class="col-md-6">
                             <?php
-                            echo Html::textInput('keyword', '', ['class' => 'form-control']);
+                            echo Html::textInput('keyword', '', ['class' => 'form-control', 'id' => 'keyword']);
                             ?>
                         </div>
                         <div class="col-md-2">
@@ -65,11 +66,11 @@ $mobileCategory = MobileCategory::find()->from('mobile_category t')->select(['t.
                     <?php foreach ($mobileCategory as $key => $mc) { ?>
                         <div class="col-md-3 col-xs-12 col-sm-6">
                             <div class="box">
-                                <?php echo Html::img('@web/images/mobile.png',['alt' => 'GujjuMobi'])?>
+                                <?php echo Html::img('@web/images/mobile.png', ['alt' => 'GujjuMobi']) ?>
                                 <h4>
-                                    <?php echo Html::a($mc->name,['adpost/result/' .$mc->id ])?>
+                                    <?php echo Html::a($mc->name, ['adpost/result/' . $mc->id]) ?>
                                 </h4>
-                                <strong><?php echo $mc->total_ads?> Ads</strong>
+                                <strong><?php echo $mc->total_ads ?> Ads</strong>
                             </div>
                         </div>
                     <?php } ?>
@@ -78,3 +79,21 @@ $mobileCategory = MobileCategory::find()->from('mobile_category t')->select(['t.
         </div>
     </div>
 </div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#serach').on('submit', function (e) {
+            e.preventDefault();
+            console.log($(this));
+            var category = $("#category").val(),
+                keyword = $("#keyword").val(),
+                url = '<?php echo Url::to('adpost/result', TRUE); ?>' +  '?keyword=' + keyword + '&category=' +
+                    category;
+            if (category != "" || keyword != "") {
+                window.location = url;
+            }
+            return false;
+
+        });
+    });
+</script>

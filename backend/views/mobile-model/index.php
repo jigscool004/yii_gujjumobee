@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-header">
                 <?= Html::a('Create Mobile Model', ['create'], ['class' => 'btn btn-sm pull-right btn-success']) ?>
             </div>
+
             <div class="box-body">
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
