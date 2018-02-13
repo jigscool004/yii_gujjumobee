@@ -16,8 +16,9 @@ use yii\helpers\Url;
 use yii\widgets\Pjax;
 $this->title = 'Gujjumobi | Home';
 $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
-
+//
 ?>
+
 <div id="search-section">
     <div class="container">
         <?php $form = ActiveForm::begin(['id' => 'serach','method' => 'get']); ?>
@@ -77,10 +78,11 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
         </div>
     </div>
 </section>
-
+<?php $this->registerJsFile('js/jquery.toaster.js', ['depends' => [yii\web\JqueryAsset::className()]]); ?>
 <script type="text/javascript">
 
     $(document).ready(function() {
+        $.toaster({ priority : 'success',  message : 'Your ad status is '});
         $('#serach').on('submit',function (e) {
             e.preventDefault();
             var $this = $(this);

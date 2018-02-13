@@ -14,6 +14,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 
 
 /**
@@ -25,20 +26,20 @@ class AdpostController extends Controller {
      */
     public function behaviors() {
         return [
-            /*'access' => [
+            'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error', 'signup'],
+                        'actions' => ['result', 'error', 'view'],
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['create','update','getfieldvalues','photodelete','managearchivestatus','managestatus'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
-            ],*/
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -213,6 +214,7 @@ class AdpostController extends Controller {
     public function actionResult() {
         $this->layout = 'homepage';
         $id = Yii::$app->request->getQueryParam('category');
+        $id = $id > 0 ? $id : Yii::$app->request->getQueryParam('id');
         $keyword = Yii::$app->request->getQueryParam('keyword');
         $query = Adpost::find()->orderBy('id DESC');
         $serachArr = [];
