@@ -15,12 +15,14 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
-
+use frontend\models\AdWishlist;
 
 /**
  * AdpostController implements the CRUD actions for Adpost model.
  */
 class AdpostController extends Controller {
+    public $adWishListArr = [];
+
     /**
      * @inheritdoc
      */
@@ -31,11 +33,11 @@ class AdpostController extends Controller {
                 'rules' => [
                     [
                         'actions' => ['result', 'error', 'view'],
-                        'allow' => true,
+                        'allow' => TRUE,
                     ],
                     [
-                        'actions' => ['create','update','getfieldvalues','photodelete','managearchivestatus','managestatus'],
-                        'allow' => true,
+                        'actions' => ['create', 'update', 'getfieldvalues', 'photodelete', 'managearchivestatus', 'managestatus', 'adwishlist', 'removeadwishlist'],
+                        'allow' => TRUE,
                         'roles' => ['@'],
                     ],
                 ],
@@ -189,22 +191,22 @@ class AdpostController extends Controller {
     }
 
     public function actionManagestatus() {
-        if (isset($_REQUEST['adpost_id'],$_REQUEST['is_sold']) && $_REQUEST['adpost_id'] > 0) {
-             $adpost = Adpost::findOne($_REQUEST['adpost_id']);
-             $adpost->is_sold = $_REQUEST['is_sold'];
-             $adpost->updated_on = date('Y-m-d H:i:s');
-             echo (int) $adpost->save();
+        if (isset($_REQUEST['adpost_id'], $_REQUEST['is_sold']) && $_REQUEST['adpost_id'] > 0) {
+            $adpost = Adpost::findOne($_REQUEST['adpost_id']);
+            $adpost->is_sold = $_REQUEST['is_sold'];
+            $adpost->updated_on = date('Y-m-d H:i:s');
+            echo (int)$adpost->save();
         } else {
             echo 0;
         }
     }
 
     public function actionManagearchivestatus() {
-        if (isset($_REQUEST['adpost_id'],$_REQUEST['is_archived']) && $_REQUEST['adpost_id'] > 0) {
-             $adpost = Adpost::findOne($_REQUEST['adpost_id']);
-             $adpost->is_archived = $_REQUEST['is_archived'];
-             $adpost->updated_on = date('Y-m-d H:i:s');
-             echo (int) $adpost->save();
+        if (isset($_REQUEST['adpost_id'], $_REQUEST['is_archived']) && $_REQUEST['adpost_id'] > 0) {
+            $adpost = Adpost::findOne($_REQUEST['adpost_id']);
+            $adpost->is_archived = $_REQUEST['is_archived'];
+            $adpost->updated_on = date('Y-m-d H:i:s');
+            echo (int)$adpost->save();
         } else {
             echo 0;
         }
@@ -213,19 +215,29 @@ class AdpostController extends Controller {
 
     public function actionResult() {
         $this->layout = 'homepage';
+        $adWishList = AdWishlist::find()->all();
+        $adWishListArr = array();
+        if (count($adWishList) > 0) {
+            foreach ($adWishList as $key => $adWish) {
+                $adWishListArr[$adWish->adpost_id] = [
+                    'id' => $adWish->id,
+                    'ad_user_id' => $adWish->ad_user_id,
+                ];
+            }
+        }
         $id = Yii::$app->request->getQueryParam('category');
         $id = $id > 0 ? $id : Yii::$app->request->getQueryParam('id');
         $keyword = Yii::$app->request->getQueryParam('keyword');
         $query = Adpost::find()->orderBy('id DESC');
         $serachArr = [];
         if ($id > 0) {
-            $query->andFilterCompare('category', $id,'=');
+            $query->andFilterCompare('category', $id, '=');
             //$serachArr['category'] = $id;
         }
 
         if ($keyword != '') {
             $serachArr['adtitle'] = $keyword;
-            $query->andFilterWhere(['like','adtitle',$keyword]);
+            $query->andFilterWhere(['like', 'adtitle', $keyword]);
         }
 
         if (count($serachArr) > 0) {
@@ -238,11 +250,51 @@ class AdpostController extends Controller {
                 ],
             ]
         );
-        return $this->render('result',[
+        return $this->render('result', [
             'id' => $id,
             'keyword' => $keyword,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'adWishListArr' => $adWishListArr,
         ]);
+    }
+
+    public function actionAdwishlist() {
+        $id = Yii::$app->request->getQueryParam('id');
+        $adPost = Adpost::findOne($id);
+        $user_id = Yii::$app->user->getId();
+        if ($adPost->adpost_user_id != $user_id) {
+            $isWishList = AdWishlist::find()->where(['ad_user_id' => $user_id, 'adpost_id' => $id])->count();
+            if ($isWishList > 0) {
+                echo json_encode(['type' => -2]);
+                Yii::$app->end();
+            }
+            $adWishList = new AdWishlist;
+            $adWishList->adpost_id = $id;
+            $adWishList->ad_user_id = Yii::$app->user->getId();
+            $adWishList->created_on = date('Y-m-d H:i:s');
+
+            if ($adWishList->save(FALSE)) {
+                $url = Yii::$app->urlManager->createUrl('adpost/removeadwishlist/' . $adWishList->id);
+                echo json_encode(['type' => 1, 'url' => $url]);
+                Yii::$app->end();
+            } else {
+                echo json_encode(['type' => 0]);
+                Yii::$app->end();
+            }
+        } else {
+            echo json_encode(['type' => -1]);
+            Yii::$app->end();
+        }
+    }
+
+    public function actionRemoveadwishlist() {
+        $id = Yii::$app->request->getQueryParam('id');
+        $adWishList = AdWishlist::findOne($id);
+        $adpost_id = $adWishList->adpost_id;
+        $isDelete = (int)$adWishList->delete(FALSE);
+        $url = Yii::$app->urlManager->createUrl('adpost/adwishlist/' . $adpost_id);
+        echo json_encode(['type' => $isDelete, 'url' => $url]);
+        Yii::$app->end();
     }
 
     /**

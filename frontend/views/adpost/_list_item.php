@@ -18,6 +18,7 @@ if ($firstPhotoName != '' && file_exists($fileAbsolutePath . '/' . $firstPhotoNa
 } else {
     $image = Yii::$app->urlManager->baseUrl . '/images/default.png';
 }
+
 ?>
 <li>
     <div class="well ad-listing clearfix">
@@ -27,7 +28,7 @@ if ($firstPhotoName != '' && file_exists($fileAbsolutePath . '/' . $firstPhotoNa
                      alt="<?php echo $model->adtitle;
                      ?>">
                 <div class="total-images">
-                    <strong><?php echo $total_photos . " Photos"?></strong>
+                    <strong><?php echo $total_photos . " Photos" ?></strong>
                 </div>
             </div>
         </div>
@@ -43,9 +44,25 @@ if ($firstPhotoName != '' && file_exists($fileAbsolutePath . '/' . $firstPhotoNa
                                             class="fa fa-envelope"></i></a>
                             </li>
                             <li>
-                                <span class="shareTip wishlistClass" title="" data-toggle="tooltip"
-                                      data-original-title="Add Wishlist" id="wishList" data-id="2"><i
-                                            class="fa fa-heart"></i></span>
+                                <?php $user_id = Yii::$app->user->getId();
+                                if (isset($adWishListArr[$model->id]['ad_user_id']) && $adWishListArr[$model->id]['ad_user_id'] == $user_id)
+                                { ?>
+                                    <span class="shareTip wishlistClass btnHoverCls" title="" data-toggle="tooltip"
+                                          data-original-title="Remove Wishlist" data-url="<?php echo
+                                    Yii::$app->urlManager->createUrl('adpost/removeadwishlist/'
+                                              . $adWishListArr[$model->id]['id']) ?>" id="wishList<?php echo
+                                    $model->id?>" data-type="remove"  data-id="<?php echo $model->id?>"><i
+                                                class="fa
+                                              fa-heart"></i></span>
+                                <?php } else { ?>
+                                    <span class="shareTip wishlistClass" title="" data-toggle="tooltip"
+                                          data-original-title="Add Wishlist" data-url="<?php echo
+                                    Yii::$app->urlManager->createUrl('adpost/adwishlist/' . $model->id) ?>"
+                                          id="wishList<?php echo $model->id?>" data-type="add" data-id="<?php echo
+                                    $model->id?>"><i
+                                                class="fa fa-heart"></i></span>
+                                <?php } ?>
+
                             </li>
                         </ul>
                         <ul class="ad-meta-info pull-left">

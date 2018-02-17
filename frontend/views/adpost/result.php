@@ -18,7 +18,12 @@ $this->title = 'Gujjumobi | Home';
 $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
 //
 ?>
-
+<style>
+    .btnHoverCls{background:#f58936;color:#fff;}
+</style>
+<script>
+    var isLoggedIn = '<?php echo (int)!Yii::$app->user->isGuest;?>'
+</script>
 <div id="search-section">
     <div class="container">
         <?php $form = ActiveForm::begin(['id' => 'serach','method' => 'get']); ?>
@@ -41,8 +46,8 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
                     </div>
                     <div class="col-md-3 col-xs-12 col-sm-4 ">
                         <?= Html::submitButton('Search',
-                            ['class' => 'btn btn-danger btn-sm btn-block', 'name' => 'Search', 'style' => 'background-color: #2d343d;
-                                border-color: #2d343d;padding:8px']) ?>
+                            ['class' => 'btn btn-light btn-sm btn-block', 'name' => 'Search', 'style' =>
+                                'padding:8px;font-weight:bold']) ?>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -63,6 +68,7 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
                         'class' => 'list-wrapper',
                         'id' => 'list-wrapper',
                     ],
+                    'viewParams' => ['adWishListArr' => $adWishListArr],
                 //    'itemOptions' => ['class' => 'col-md-6 col-sm-6 col-xs-12'],
                     'layout' => "<div class='filter-brudcrums' style='margin-bottom: 10px;'>{summary}</div><div class=\"clearfix\"></div>    <ul class='list-unstyled'>{items}</ul>
                        <div class='clearfix'></div>",
@@ -79,10 +85,12 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
     </div>
 </section>
 <?php $this->registerJsFile('js/jquery.toaster.js', ['depends' => [yii\web\JqueryAsset::className()]]); ?>
+<?php $this->registerJsFile('js/common.js', ['depends' => [yii\web\JqueryAsset::className()]]); ?>
 <script type="text/javascript">
 
     $(document).ready(function() {
-        $.toaster({ priority : 'success',  message : 'Your ad status is '});
+        $('[data-toggle="tooltip"]').tooltip();
+        //$.toaster({ priority : 'success',  message : 'Your ad status is '});
         $('#serach').on('submit',function (e) {
             e.preventDefault();
             var $this = $(this);

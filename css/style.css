@@ -5969,9 +5969,9 @@ ul.category-list-data li:hover a span {
     background: #f34235 none repeat scroll 0 0;
     border: 1px solid #f34235;
 }
-.alert.alert-danger::after {
-    content: "";
-}
+/*.alert.alert-danger::after {*/
+    /*content: "";*/
+/*}*/
 .alert.alert-success.alert-outline {
     background: transparent;
     border: 1px solid #8ac249;
@@ -6023,6 +6023,7 @@ ul.category-list-data li:hover a span {
 .alert .close:hover {
     opacity: 1;
 }
+.message {margin: 30px;color:#fff;}
 .label.label-success {
     background: #8ac249 none repeat scroll 0 0;
 }

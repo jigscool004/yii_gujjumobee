@@ -93,6 +93,7 @@
 				'top'      : '50%',
 				'right'    : '40%',
 				'width'    : '300px',
+				'color'    : '#fff',
 				'zIndex'   : 50000
 			}
 		},
@@ -110,7 +111,7 @@
 
 			'defaults' :
 			{
-				'title'    : 'Notice',
+				//'title'    : 'Notice',
 				'priority' : 'success'
 			},
 
@@ -132,7 +133,8 @@
 						opacity : '0',
 						padding : '0px',
 						margin  : '0px',
-						height  : '0px'
+						height  : '0px',
+						color   : 'white'
 					},
 					{
 						duration : settings.toast.fade,
