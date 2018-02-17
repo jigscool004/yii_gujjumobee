@@ -13,6 +13,15 @@ $this->params['breadcrumbs'][] = ['label' => $model->mobileModel->name, 'url' =>
 $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => '#'];
 
 ?>
+<style>
+    .btnHoverCls {
+        background: #f58936;
+        color: #fff;
+    }
+</style>
+<script type="text/javascript">
+    var isLoggedIn = '<?php echo (int)!Yii::$app->user->isGuest;?>';
+</script>
 <div class="col-md-8 col-xs-12 col-sm-12">
     <div class="single-ad">
         <div class="ad-box">
@@ -69,7 +78,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => '#'];
                         </li>
                     <?php }
                 } else { ?>
-                    <li class="flex-active-slide" >
+                    <li class="flex-active-slide">
                         <?php echo Html::img(Yii::$app->urlManager->baseUrl . '/images/default.png', ['alt' => '', 'draggable' => FALSE,]); ?>
                     </li>
                 <?php } ?>
@@ -203,10 +212,24 @@ Jigar Prajapati</a></span>
                         <tbody>
                         <tr>
                             <td>
-                                <input type="hidden" name="" readonly="readonly" id="wishlistId" value="">
-                                <span class="shareTip" title="" data-toggle="tooltip" data-original-title="Add Wishlist"
-                                      id="wishList"><i class="fa fa-heart"></i>
-                                </span>
+                                <?php $user_id = Yii::$app->user->getId();
+                                if (isset($adWishListArr[$user_id])) { ?>
+                                    <span class="shareTip wishlistClass btnHoverCls" title="" data-toggle="tooltip"
+                                          data-original-title="Remove Wishlist" data-url="<?php echo
+                                    Yii::$app->urlManager->createUrl('adpost/removeadwishlist/'
+                                        . $adWishListArr[$user_id]) ?>" id="wishList<?php echo
+                                    $model->id ?>" data-type="remove" data-id="<?php echo $model->id ?>"><i
+                                                class="fa
+                                              fa-heart"></i></span>
+                                <?php } else { ?>
+                                    <span class="shareTip wishlistClass" title="" data-toggle="tooltip"
+                                          data-original-title="Add Wishlist" data-url="<?php echo
+                                    Yii::$app->urlManager->createUrl('adpost/adwishlist/' . $model->id) ?>"
+                                          id="wishList<?php echo $model->id ?>" data-type="add" data-id="<?php echo
+                                    $model->id ?>"><i
+                                                class="fa fa-heart"></i></span>
+                                <?php } ?>
+
                             </td>
                             <td>
                                 <span class="shareTip" id="addClass" title=""
@@ -224,10 +247,13 @@ Jigar Prajapati</a></span>
         </div>
     </div>
 </div>
+<?php var_dump(Yii::$app->user->isGuest);?>
+<?php $this->registerJsFile('js/jquery.toaster.js', ['depends' => [yii\web\JqueryAsset::className()]]); ?>
+<?php $this->registerJsFile('js/common.js', ['depends' => [yii\web\JqueryAsset::className()]]); ?>
 <script type="text/javascript">
     $(document).ready(function () {
 
-
+        <?php if (Yii::$app->user->isGuest == TRUE) {}else{?>
         $('.manage-adpost-archive').on('click', function (e) {
             e.preventDefault();
             var $this = $(this),
@@ -331,6 +357,7 @@ Jigar Prajapati</a></span>
             });
 
         });
+        <?php }?>
 
         $('[data-toggle="tooltip"]').tooltip();
         $('#carousels').flexslider({

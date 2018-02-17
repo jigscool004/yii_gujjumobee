@@ -4,7 +4,7 @@
 
 
 $(".wishlistClass").on("click", function () {
-    if (isLoggedIn) {
+    if (isLoggedIn == 1) {
         var $this = $(this);
         $.ajax({
             url: $this.attr('data-url'),

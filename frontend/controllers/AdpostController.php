@@ -76,8 +76,11 @@ class AdpostController extends Controller {
      */
     public function actionView($id) {
         $this->layout = 'adpost';
+        $adWishListArr = ArrayHelper::map(AdWishlist::find()->where(['adpost_id' => $id])->all(),'ad_user_id','id');
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'adWishListArr' => $adWishListArr
         ]);
     }
 
