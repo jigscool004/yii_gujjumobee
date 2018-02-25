@@ -29,7 +29,7 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
     <div class="container">
         <?php $form = ActiveForm::begin(['id' => 'serach','method' => 'get']); ?>
             <div class="row">
-                <div class="col-sm-12 col-xs-12 col-md-12">
+                <div class="col-sm-12 col-xs-12 col-md-12" >
                     <div class="col-md-3 col-xs-12 col-sm-4">
                         <?= Select2::widget([
                             'name' => 'category',
@@ -55,7 +55,7 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
             </div>
         <?php ActiveForm::end(); ?>
     </div>
-</dicv>
+</div>
 <section class="section-padding pattern_dots">
     <div class="container">
         <div class="row">

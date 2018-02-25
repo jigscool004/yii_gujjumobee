@@ -2,18 +2,19 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\AdpostMessage */
 
 $this->title = 'Create Adpost Message';
 $this->params['breadcrumbs'][] = ['label' => 'Adpost Messages', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$form = ActiveForm::begin();
+Pjax::begin(['id' => 'adpost-messageform']);
+$form = ActiveForm::begin(['id' => 'adpostmsg','enableAjaxValidation' => true]);
 $model->adpost_id = $id;
+
 ?>
 <div class="modal-dialog">
-
     <!-- Modal content-->
     <div class="modal-content">
         <div class="modal-header">
@@ -29,4 +30,22 @@ $model->adpost_id = $id;
         </div>
     </div>
 </div>
-<?php ActiveForm::end(); ?>
+<?php ActiveForm::end(); 
+              Pjax::end();
+?>
+<script type="text/javascript">
+    
+$("#adpostmsg").on('submit',function(e) {
+          e.preventDefault();
+            var $this = $(this);
+                var options = {
+                    type: 'post',
+                    url: $this.attr('action'),
+                    //container: '#adpostlist-grid', // id to update content
+                    data: $this.serialize()
+                };
+                console.log(options);
+            $.pjax.reload(options); 
+            return false;
+});
+</script>

@@ -60,4 +60,8 @@ $(".bootstrapModel").on('click',function(e) {
    $('body').append(content);
    $("#adMessageBox").modal({backdrop: 'static', keyboard: false}).load($(this).attr('href'));
    return false;
+
 });
+
+
+   

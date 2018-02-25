@@ -63,6 +63,11 @@ class AdpostMessageController extends Controller {
         $this->layout = 'ajax';
         $model = new AdpostMessage();
         $id = Yii::$app->request->getQueryParam('id');
+        if (Yii::$app->request->isAjax == true && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = 'json';
+            return ActiveForm::validate($model);
+        }
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
