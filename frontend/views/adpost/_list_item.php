@@ -21,7 +21,7 @@ if ($firstPhotoName != '' && file_exists($fileAbsolutePath . '/' . $firstPhotoNa
 
 ?>
 <li>
-    <div class="well ad-listing clearfix">
+    <div class="well ad-listing clearfix" style='padding: 5px;background: #fff;'>
         <div class="col-md-3 col-sm-5 col-xs-12 grid-style no-padding">
             <div class="img-box">
                 <img class="img-responsive" src="<?php echo $image ?>"
@@ -39,7 +39,7 @@ if ($firstPhotoName != '' && file_exists($fileAbsolutePath . '/' . $firstPhotoNa
                         <h3><?php echo Html::a($model->adtitle, ['adpost/' . $model->id]) ?></h3>
                         <ul class="additional-info pull-right">
                             <li>
-                                <a class="shareTip bootstrapModel" href="#myModal2" id="2" title=""
+                                <a class="shareTip bootstrapModel" href="<?php echo Yii::$app->urlManager->createUrl('adpost-message/create/?id=' . $model->id)  ?>" id="2" title=""
                                    data-toggle="tooltip" data-original-title="Send Message"><i
                                             class="fa fa-envelope"></i></a>
                             </li>

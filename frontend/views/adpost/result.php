@@ -14,6 +14,7 @@ use yii\widgets\ListView;
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
+use yii\base\View;
 $this->title = 'Gujjumobi | Home';
 $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
 //
@@ -54,7 +55,7 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
             </div>
         <?php ActiveForm::end(); ?>
     </div>
-</div>
+</dicv>
 <section class="section-padding pattern_dots">
     <div class="container">
         <div class="row">
@@ -84,8 +85,15 @@ $mobilCategoryArr = MobileCategory::find()->where(['status' => 1])->All();
         </div>
     </div>
 </section>
-<?php $this->registerJsFile('js/jquery.toaster.js', ['depends' => [yii\web\JqueryAsset::className()]]); ?>
-<?php $this->registerJsFile('js/common.js', ['depends' => [yii\web\JqueryAsset::className()]]); ?>
+<?php $this->registerJsFile(Yii::$app->urlManager->createUrl('js/jquery.toaster.js'), ['depends' => [yii\web\JqueryAsset::className()]]); ?>
+<?php $this->registerJsFile(Yii::$app->urlManager->createUrl('js/common.js'), ['depends' => [yii\web\JqueryAsset::className()]]);
+//
+//$this->registerJs(
+//    "$('[data-toggle=\"tooltip\"]').tooltip();",
+//     \yii\web\View::POS_END
+//    //'my-button-handler'
+//);
+?>
 <script type="text/javascript">
 
     $(document).ready(function() {

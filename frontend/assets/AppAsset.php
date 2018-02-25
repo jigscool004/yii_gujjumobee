@@ -19,9 +19,18 @@ class AppAsset extends AssetBundle {
         'css/colors/defualt.css',
         'css/skins/minimal/minimal.css',
     ];
+    
     public $js = [
         'js/bootbox.min.js',
     ];
+    
+    
+    public function init() {
+        if (\Yii::$app->user->isGuest == true) {
+            $this->js[] = 'js/bootstrap.min.js';
+        } 
+        //parent::init();
+    }
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',

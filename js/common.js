@@ -1,4 +1,4 @@
-/**
+0/**
  * Created by Jigar Kumar on 2/15/2018.
  */
 
@@ -51,4 +51,13 @@ $(".wishlistClass").on("click", function () {
     } else {
         $.toaster({priority: 'danger', message: 'You must be login'});
     }
+});
+
+
+$(".bootstrapModel").on('click',function(e) {
+   e.preventDefault();
+   var content = '<div class="modalBox modal fade" role="dailog" id="adMessageBox"></div>';
+   $('body').append(content);
+   $("#adMessageBox").modal({backdrop: 'static', keyboard: false}).load($(this).attr('href'));
+   return false;
 });
