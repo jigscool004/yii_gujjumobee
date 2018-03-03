@@ -3,6 +3,8 @@
 namespace frontend\models;
 
 use Yii;
+use common\models\User;
+use frontend\models\Adpost;
 
 /**
  * This is the model class for table "adpost_message".
@@ -18,6 +20,7 @@ use Yii;
  */
 class AdpostMessage extends \yii\db\ActiveRecord
 {
+    public $totalMsg;
     /**
      * @inheritdoc
      */
@@ -54,5 +57,13 @@ class AdpostMessage extends \yii\db\ActiveRecord
             'is_archived' => 'Is Archived',
             'created_on' => 'Created On',
         ];
+    }
+
+    public function getAdpostUser() {
+        return $this->hasOne(User::className(),['id' => 'user_id']);
+    }
+
+    public function getAdpost() {
+        return $this->hasOne(Adpost::className(),['id' => 'adpost_id']);
     }
 }

@@ -56,6 +56,10 @@ $(".wishlistClass").on("click", function () {
 
 $(".bootstrapModel").on('click',function(e) {
    e.preventDefault();
+   if (isLoggedIn == 0) {
+        bootbox.alert("Login required");
+        return false;
+   }
    var content = '<div class="modalBox modal fade" role="dailog" id="adMessageBox"></div>';
    $('body').append(content);
    $("#adMessageBox").modal({backdrop: 'static', keyboard: false}).load($(this).attr('href'));

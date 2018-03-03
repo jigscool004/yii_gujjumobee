@@ -12,6 +12,7 @@ use frontend\models\AdpostMessage;
  */
 class AdpostMessageSearch extends AdpostMessage
 {
+
     /**
      * @inheritdoc
      */
@@ -44,9 +45,24 @@ class AdpostMessageSearch extends AdpostMessage
         $query = AdpostMessage::find();
 
         // add conditions that should always apply here
-
+        $query->select('*,COUNT(id) AS totalMsg');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+        ]);
+
+
+        $dataProvider->setSort([
+            'attributes' => [
+                'message' => [
+                    'asc' => ['message' => SORT_ASC],
+                    'desc' => ['message' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'created_on' => [
+                    'asc' => ['created_on' => SORT_ASC],
+                    'desc' => ['created_on' => SORT_DESC],
+                ]
+            ]
         ]);
 
         $this->load($params);
@@ -56,6 +72,7 @@ class AdpostMessageSearch extends AdpostMessage
             // $query->where('0=1');
             return $dataProvider;
         }
+        $query->groupBy('adpost_id,user_id');
 
         // grid filtering conditions
         $query->andFilterWhere([

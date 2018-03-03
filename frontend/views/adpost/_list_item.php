@@ -71,7 +71,10 @@ if ($firstPhotoName != '' && file_exists($fileAbsolutePath . '/' . $firstPhotoNa
                             </li>
                             <li>
                                 <i class="fa fa-clock-o"></i>
-                                8 months ago
+                                <?php
+                                   echo common\components\Commoncontroller::time_elapsed_string($model->created_on)
+                                ?>
+                             
                             </li>
                         </ul>
                         <div class="clearfix"></div>

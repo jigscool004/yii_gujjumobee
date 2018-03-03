@@ -232,10 +232,13 @@ Jigar Prajapati</a></span>
 
                             </td>
                             <td>
-                                <span class="shareTip" id="addClass" title=""
+                                <a class="shareTip bootstrapModel" href="<?php echo Yii::$app->urlManager->createUrl('adpost-message/create/?id=' . $model->id)  ?>" id="$model->id" title=""
+                                   data-toggle="tooltip" data-original-title="Send Message"><i
+                                            class="fa fa-envelope"></i></a>
+                                <!-- <span class="shareTip" id="addClass" title=""
                                       data-toggle="tooltip" data-original-title="Send Message">
                                     <i class="fa fa-envelope"></i>
-                                </span>
+                                </span>-->
                             </td>
                         </tr>
                         </tbody>
@@ -247,9 +250,9 @@ Jigar Prajapati</a></span>
         </div>
     </div>
 </div>
-<?php var_dump(Yii::$app->user->isGuest);?>
-<?php $this->registerJsFile('js/jquery.toaster.js', ['depends' => [yii\web\JqueryAsset::className()]]); ?>
-<?php $this->registerJsFile('js/common.js', ['depends' => [yii\web\JqueryAsset::className()]]); ?>
+
+<?php $this->registerJsFile(Yii::$app->urlManager->createUrl('js/jquery.toaster.js'), ['depends' => [yii\web\JqueryAsset::className()]]); ?>
+<?php $this->registerJsFile(Yii::$app->urlManager->createUrl('js/common.js'), ['depends' => [yii\web\JqueryAsset::className()]]); ?>
 <script type="text/javascript">
     $(document).ready(function () {
 

@@ -8,6 +8,7 @@ use frontend\models\AdpostMessageSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use frontend\models\Adpost;
 
 /**
  * AdpostMessageController implements the CRUD actions for AdpostMessage model.
@@ -33,6 +34,7 @@ class AdpostMessageController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
+        $this->layout = 'logged_in_user';
         $searchModel = new AdpostMessageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -49,6 +51,7 @@ class AdpostMessageController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id) {
+        $this->layout = 'logged_in_user';
         return $this->render('view', [
                     'model' => $this->findModel($id),
         ]);
@@ -69,6 +72,7 @@ class AdpostMessageController extends Controller {
 //        }
 //
 //
+
         if ($model->load(Yii::$app->request->post()) ) {
             $model->adpost_id = $id;
             $model->user_id = Yii::$app->user->getId();

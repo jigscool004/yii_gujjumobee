@@ -85,7 +85,7 @@ AppAsset::register($this);
                                 ['label' => 'Wishlist','url' => ['user/wishlist']],
                                 ['label' => 'Favourites Ads','url' => ['user/favads']],
                                 ['label' => 'Archives Ads','url' => ['user/archivesad']],
-                                ['label' => 'Message','url' => ['message/index']],
+                                ['label' => 'Message','url' => ['adpost-message/index']],
                                 ['label' => 'Logout','url' => ['site/logout']],
                             ];
                             echo Html::ul($itemArr,['item' => function($item,$index) {
