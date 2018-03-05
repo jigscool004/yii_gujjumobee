@@ -63,6 +63,10 @@ class AdpostMessage extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(),['id' => 'user_id']);
     }
 
+    public function getAdpostUserCreatedBy() {
+        return $this->hasOne(User::className(),['id' => 'created_by']);
+    }
+
     public function getAdpost() {
         return $this->hasOne(Adpost::className(),['id' => 'adpost_id']);
     }

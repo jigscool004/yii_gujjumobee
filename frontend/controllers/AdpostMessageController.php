@@ -52,9 +52,18 @@ class AdpostMessageController extends Controller {
      */
     public function actionView($id) {
         $this->layout = 'logged_in_user';
-        return $this->render('view', [
-                    'model' => $this->findModel($id),
-        ]);
+        $user_id = Yii::$app->request->getQueryParam('user_id');
+        if ((int)$id > 0 && (int)$user_id > 0) {
+            $model = AdpostMessage::find()->where(['adpost_id' => $id,'user_id' => $user_id])->all();
+            if ($model == NULL) {
+                $this->redirect(['adpost-message/index']);
+            }
+            return $this->render('view', [
+                'model' => $model,
+            ]);
+        } else {
+            $this->redirect(['adpost-message/index']);
+        }
     }
 
     /**

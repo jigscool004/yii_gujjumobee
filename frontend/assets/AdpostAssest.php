@@ -21,7 +21,7 @@ class AdpostAssest extends AssetBundle{
         'css/forest-menu.css',
         'css/colors/defualt.css',
         'css/skins/minimal/minimal.css',
-        'css/slider.css'
+        'css/slider.css',
     ];
     public $js = [
        // 'js/bootstrap.min.js',
