@@ -20,7 +20,7 @@ use frontend\models\Adpost;
  */
 class AdpostMessage extends \yii\db\ActiveRecord
 {
-    public $totalMsg;
+    public $totalMsg,$createdOn;
     /**
      * @inheritdoc
      */

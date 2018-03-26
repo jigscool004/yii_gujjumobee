@@ -37,7 +37,8 @@ class Adpost extends \yii\db\ActiveRecord {
     /**
      * @inheritdoc
      */
-    public $fileName;
+
+    public $fileName,$message;
 
     public static function tableName() {
         return 'adpost';

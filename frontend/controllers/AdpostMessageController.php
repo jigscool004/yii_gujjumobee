@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use frontend\models\Adpost;
+use yii\filters\AccessControl;
 
 /**
  * AdpostMessageController implements the CRUD actions for AdpostMessage model.
@@ -20,6 +21,20 @@ class AdpostMessageController extends Controller {
      */
     public function behaviors() {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['result', 'error'],
+                        'allow' => TRUE,
+                    ],
+                    [
+                        'actions' => ['create', 'update', 'view','index'],
+                        'allow' => TRUE,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -51,20 +66,59 @@ class AdpostMessageController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id) {
-        $this->layout = 'logged_in_user';
+
         $user_id = Yii::$app->request->getQueryParam('user_id');
+        $viewLoad = Yii::$app->request->getQueryParam('view_load');
+
+        $this->layout = 'logged_in_user';
         if ((int)$id > 0 && (int)$user_id > 0) {
+            $model = new AdpostMessage();
+            $adpostMessage = Yii::$app->request->post('Adpost');
+            if (!empty($adpostMessage)) {
+                $model->adpost_id = $id;
+                $model->is_sent = 1;
+                $model->message = $adpostMessage['message'];
+                $model->user_id = $user_id;
+                $model->created_by = Yii::$app->user->getId();
+                $model->created_on = date('Y-m-d H:i:s');
+                if ($model->save()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+                Yii::$app->end();
+            }
+
+
             $model = AdpostMessage::find()->where(['adpost_id' => $id,'user_id' => $user_id])->all();
+            $adpostModel = Adpost::findOne($id);
             if ($model == NULL) {
                 $this->redirect(['adpost-message/index']);
             }
+
+            if ($viewLoad == 1) {
+                $this->layout = 'ajax';
+                return $this->render('view', [
+                    'model' => $model,
+                    'user_id' => $user_id,
+                    'viewLoad' => $viewLoad,
+                    'adpostModel' => $adpostModel,
+                ]);
+                Yii::$app->end();
+            }
+
             return $this->render('view', [
                 'model' => $model,
+                'user_id' => $user_id,
+                'viewLoad' => $viewLoad,
+                'adpostModel' => $adpostModel,
             ]);
         } else {
             $this->redirect(['adpost-message/index']);
         }
     }
+
+
 
     /**
      * Creates a new AdpostMessage model.
@@ -75,16 +129,10 @@ class AdpostMessageController extends Controller {
         $this->layout = 'ajax';
         $model = new AdpostMessage();
         $id = Yii::$app->request->getQueryParam('id');
-//        if (Yii::$app->request->isAjax == true && $model->load(Yii::$app->request->post())) {
-//            Yii::$app->response->format = 'json';
-//            return ActiveForm::validate($model);
-//        }
-//
-//
-
         if ($model->load(Yii::$app->request->post()) ) {
             $model->adpost_id = $id;
             $model->user_id = Yii::$app->user->getId();
+            $model->created_by = Yii::$app->user->getId();
             $model->created_on = date('Y-m-d H:i:s');
             if ($model->save()) {
                 return 1;

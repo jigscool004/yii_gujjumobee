@@ -45,7 +45,15 @@ class AdpostMessageSearch extends AdpostMessage
         $query = AdpostMessage::find();
 
         // add conditions that should always apply here
-        $query->select('*,COUNT(id) AS totalMsg');
+        $query->select(['adpost_message.*',
+                    'COUNT(adpost_message.id) AS totalMsg',
+                    '(SELECT max(created_on) 
+                        FROM adpost_message t WHERE t.adpost_id = adpost_message.adpost_id 
+                        AND t.user_id = adpost_message.user_id
+                        GROUP BY t.adpost_id,t.user_id
+                        ORDER BY id DESC LIMIT 1    
+                     ) AS createdOn'
+                ]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -72,8 +80,8 @@ class AdpostMessageSearch extends AdpostMessage
             // $query->where('0=1');
             return $dataProvider;
         }
-        $query->groupBy('adpost_id,user_id');
-
+        $query->groupBy('adpost_message.adpost_id,adpost_message.user_id');
+        $query->innerJoin('adpost','adpost.id = adpost_message.adpost_id AND adpost.adpost_user_id=' . Yii::$app->user->getId());
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,

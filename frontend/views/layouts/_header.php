@@ -33,9 +33,9 @@ use yii\bootstrap\Dropdown;
                                 <?php
                                 echo Dropdown::widget([
                                     'items' => [
-                                        ['label' => 'Dashboard', 'url' => Url::to('user/index', true)],
-                                        ['label' => 'Profile', 'url' => Url::to('user/profile', true)],
-                                        ['label' => 'Logout', 'url' => Url::to('site/logout', true)],
+                                        ['label' => 'Dashboard', 'url' => Url::to(['user/index'], true)],
+                                        ['label' => 'Profile', 'url' => Url::to(['user/profile'], true)],
+                                        ['label' => 'Logout', 'url' => Url::to(['site/logout'], true)],
                                     ],
                                 ]);
                                 ?>
@@ -55,7 +55,7 @@ use yii\bootstrap\Dropdown;
                 <div class="col-lg-12 col-md-12">
                     <ul class="menu-logo pull-left">
                         <li>
-                            <a href="<?php echo Url::to('/', true); ?>">
+                            <a href="<?php echo Url::to(['/'], true); ?>">
                                 <?php echo Html::img('@web/images/logo.png', ['alt' => 'GujjuMobi']) ?>
                             </a>
                         </li>
