@@ -29,7 +29,7 @@ class AdpostMessageController extends Controller {
                         'allow' => TRUE,
                     ],
                     [
-                        'actions' => ['create', 'update', 'view','index'],
+                        'actions' => ['create', 'update', 'view','index','sentbox'],
                         'allow' => TRUE,
                         'roles' => ['@'],
                     ],
@@ -56,6 +56,18 @@ class AdpostMessageController extends Controller {
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    public function actionSentbox() {
+        $this->layout = 'logged_in_user';
+        $searchModel = new AdpostMessageSearch();
+        $dataProvider = $searchModel->searchSentBox(Yii::$app->request->queryParams);
+
+        return $this->render('sendbox', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
